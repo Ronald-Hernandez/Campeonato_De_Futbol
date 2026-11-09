@@ -1,4 +1,4 @@
-# Compilación y ejecutables
+# Compilacion y ejecutables
 *.exe
 *.ilk
 *.pdb
@@ -7,14 +7,14 @@
 *.out
 *.app
 
-# Carpetas de compilación CMake
+# Carpetas de compilacion CMake
 build/
 cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 
-# Configuraciones de IDEs (CLion, VS Code, Visual Studio)
+# Configuraciones de IDEs
 .idea/
 .vs/
 *.user
@@ -22,13 +22,15 @@ cmake_install.cmake
 *.userosscache
 *.sln.docstates
 
-# Documentación excluida por instrucción explícita
+# Documentacion y notas
 Documentacion/
 Documentación/
+Libreto*
+Matriz*
 *.pdf
 *.docx
 *.doc
 
-# Archivos de respaldo temporales
+# Temporales
 *.tmp
 *.bak

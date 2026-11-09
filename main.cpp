@@ -13,6 +13,8 @@
 #include <sqlext.h>
 #endif
 
+using namespace std;
+
 // =========================================================================
 // ENUMERACIONES Y CONSTANTES DE CONTROL
 // =========================================================================
@@ -28,55 +30,55 @@ enum DivisionLiga {
 };
 
 // =========================================================================
-// ESTRUCTURAS DE DATOS (PROGRAMACIÓN ESTRUCTURADA)
+// ESTRUCTURAS DE DATOS
 // =========================================================================
 
 struct Usuario {
     int idUsuario;
-    std::string usuario;
-    std::string contrasena;
-    std::string nombreCompleto;
+    string usuario;
+    string contrasena;
+    string nombreCompleto;
     RolUsuario rol;
 };
 
 struct Jugador {
     int idJugador;
     int idEquipo;
-    std::string nombre;
-    std::string apellido;
-    std::string posicion; // PORTERO, DEFENSA, MEDIOCAMPISTA, DELANTERO
+    string nombre;
+    string apellido;
+    string posicion; // PORTERO, DEFENSA, MEDIOCAMPISTA, DELANTERO
     int numeroCamiseta;
 };
 
 struct Equipo {
     int idEquipo;
-    std::string nombre;
+    string nombre;
     DivisionLiga division; // 1 = LIGA_MAYOR, 2 = LIGA_MENOR
     int idCampeonato;
-    std::vector<Jugador> jugadores;
+    vector<Jugador> jugadores;
 };
 
 struct IncidenciaGol {
     int idJugador;
-    std::string nombreJugador;
+    string nombreJugador;
     int idEquipoRival;
-    std::string nombreEquipoRival;
+    string nombreEquipoRival;
     int idPorteroVencido;
-    std::string nombrePorteroVencido;
+    string nombrePorteroVencido;
     int minuto;
     bool esAutogol;
 };
 
 struct IncidenciaTarjeta {
     int idJugador;
-    std::string nombreJugador;
-    std::string tipoTarjeta; // AMARILLA, ROJA
+    string nombreJugador;
+    string tipoTarjeta; // AMARILLA, ROJA
     int minuto;
 };
 
 struct ControlPortero {
     int idJugador;
-    std::string nombrePortero;
+    string nombrePortero;
     int idEquipo;
     int minutoEntrada;
     int minutoSalida;
@@ -87,25 +89,25 @@ struct Partido {
     int idPartido;
     int idCampeonato;
     DivisionLiga division;
-    std::string fase; // CLASIFICACION, CUARTOS, SEMIFINAL, FINAL
+    string fase; // CLASIFICACION, CUARTOS, SEMIFINAL, FINAL
     int jornada;
-    std::string fecha;
+    string fecha;
     int idLocal;
-    std::string nombreLocal;
+    string nombreLocal;
     int golesLocal;
     int idVisitante;
-    std::string nombreVisitante;
+    string nombreVisitante;
     int golesVisitante;
-    std::string estado; // PENDIENTE, FINALIZADO
-    std::vector<IncidenciaGol> goles;
-    std::vector<IncidenciaTarjeta> tarjetas;
-    std::vector<ControlPortero> porteros;
+    string estado; // PENDIENTE, FINALIZADO
+    vector<IncidenciaGol> goles;
+    vector<IncidenciaTarjeta> tarjetas;
+    vector<ControlPortero> porteros;
 };
 
 struct PosicionEquipo {
     int posicion;
     int idEquipo;
-    std::string nombreEquipo;
+    string nombreEquipo;
     int pj;
     int pg;
     int pe;
@@ -120,18 +122,18 @@ struct HistorialMovimiento {
     int idHistorial;
     int idCampeonato;
     int idEquipo;
-    std::string nombreEquipo;
+    string nombreEquipo;
     DivisionLiga origen;
     DivisionLiga destino;
-    std::string tipoMovimiento; // ASCENSO, DESCENSO
-    std::string fecha;
+    string tipoMovimiento; // ASCENSO, DESCENSO
+    string fecha;
 };
 
 struct Torneo {
     int idTorneo;
-    std::string nombre;
-    std::string fechaInicio;
-    std::string fechaFin;
+    string nombre;
+    string fechaInicio;
+    string fechaFin;
     int maxMayor;
     int maxMenor;
     bool finalizado;
@@ -139,11 +141,11 @@ struct Torneo {
 
 struct Premiacion {
     int idTorneo;
-    std::string campeonMayor;
-    std::string campeonMenor;
-    std::string maximoGoleador;
+    string campeonMayor;
+    string campeonMenor;
+    string maximoGoleador;
     int golesAnotados;
-    std::string porteroMenosVencido;
+    string porteroMenosVencido;
     int golesRecibidos;
     bool habilitada;
     bool registrada;
@@ -179,24 +181,24 @@ struct GestorBD {
     SQLHENV env = NULL;
     SQLHDBC dbc = NULL;
     bool conectada = false;
-    std::string servidorConectado = "";
+    string servidorConectado = "";
 };
 #else
 struct GestorBD {
     bool conectada = false;
-    std::string servidorConectado = "";
+    string servidorConectado = "";
 };
 #endif
 
 struct SistemaCampeonato {
     GestorBD db;
-    std::vector<Usuario> usuarios;
-    std::vector<Torneo> torneos;
+    vector<Usuario> usuarios;
+    vector<Torneo> torneos;
     int idTorneoActivo;
-    std::vector<Equipo> equipos;
-    std::vector<Partido> partidos;
-    std::vector<HistorialMovimiento> historial;
-    std::vector<Premiacion> premiaciones;
+    vector<Equipo> equipos;
+    vector<Partido> partidos;
+    vector<HistorialMovimiento> historial;
+    vector<Premiacion> premiaciones;
 
     int autoIncUsuario;
     int autoIncTorneo;
@@ -213,7 +215,7 @@ struct SistemaCampeonato {
 // Utilidades
 void pausarConsola();
 Equipo* buscarEquipoPorId(SistemaCampeonato &sistema, int idEquipo);
-std::string sanitizarSQL(const std::string &input);
+string sanitizarSQL(const string &input);
 
 // Conexión y Persistencia BD SQL Server
 bool dbInicializarYConectar(GestorBD &bd);
@@ -232,8 +234,8 @@ bool dbCrearTorneoEnBD(SistemaCampeonato &sistema, Torneo &t);
 // Persistencia en Archivo Local (Respaldo)
 void inicializarSistema(SistemaCampeonato &sistema);
 void inicializarDatosSemilla(SistemaCampeonato &sistema);
-bool guardarDatosEnArchivo(const SistemaCampeonato &sistema, const std::string &ruta = "datos_campeonato.txt");
-bool cargarDatosDesdeArchivo(SistemaCampeonato &sistema, const std::string &ruta = "datos_campeonato.txt");
+bool guardarDatosEnArchivo(const SistemaCampeonato &sistema, const string &ruta = "datos_campeonato.txt");
+bool cargarDatosDesdeArchivo(SistemaCampeonato &sistema, const string &ruta = "datos_campeonato.txt");
 
 // Módulo Torneo, Equipos y Jugadores
 void crearTorneo(SistemaCampeonato &sistema);
@@ -243,20 +245,20 @@ void registrarEquipo(SistemaCampeonato &sistema);
 void registrarJugador(SistemaCampeonato &sistema);
 void listarEquiposYPlantillas(const SistemaCampeonato &sistema, DivisionLiga division);
 
-// Módulo Fixture y Algoritmos
+// Módulo Calendario y Algoritmos
 bool generarClasificacionRoundRobin(SistemaCampeonato &sistema, DivisionLiga division);
 bool generarCuartosDeFinalTop8(SistemaCampeonato &sistema, DivisionLiga division);
 bool generarSemifinales(SistemaCampeonato &sistema, DivisionLiga division);
 bool generarGranFinal(SistemaCampeonato &sistema, DivisionLiga division);
-void listarFixture(const SistemaCampeonato &sistema, DivisionLiga division);
+void listarCalendario(const SistemaCampeonato &sistema, DivisionLiga division);
 
 // Módulo Resultados e Incidencias
 void ingresarResultadoPartido(SistemaCampeonato &sistema);
 void verDetallePartido(const SistemaCampeonato &sistema);
-void listarCalendarioPartidos(const SistemaCampeonato &sistema, DivisionLiga division, const std::string &filtroFase = "TODAS");
+void listarCalendarioPartidos(const SistemaCampeonato &sistema, DivisionLiga division, const string &filtroFase = "TODAS");
 
 // Módulo Posiciones, Ascenso/Descenso y Premiaciones
-std::vector<PosicionEquipo> calcularTablaPosiciones(const SistemaCampeonato &sistema, DivisionLiga division);
+vector<PosicionEquipo> calcularTablaPosiciones(const SistemaCampeonato &sistema, DivisionLiga division);
 void imprimirTablaPosiciones(const SistemaCampeonato &sistema, DivisionLiga division);
 void imprimirTablasAscensoDescenso(const SistemaCampeonato &sistema);
 void aplicarAscensoDescensoOficial(SistemaCampeonato &sistema);
@@ -288,16 +290,16 @@ int main()
     SistemaCampeonato sistema;
     inicializarSistema(sistema);
 
-    std::cout << "\n=======================================================\n";
-    std::cout << "      SISTEMA DE GESTION DE CAMPEONATOS DE FUTBOL      \n";
-    std::cout << "        (MODO CONSOLA C++ CONECTADO A SQL SERVER)      \n";
-    std::cout << "=======================================================\n";
+    cout << "\n=======================================================\n";
+    cout << "      SISTEMA DE GESTION DE CAMPEONATOS DE FUTBOL      \n";
+    cout << "        (MODO CONSOLA C++ CONECTADO A SQL SERVER)      \n";
+    cout << "=======================================================\n";
 
     menuPrincipal(sistema);
 
     guardarDatosEnArchivo(sistema);
     dbDesconectar(sistema.db);
-    std::cout << "\n[OK] Datos sincronizados. ¡Hasta pronto!\n";
+    cout << "\n[OK] Datos sincronizados. ¡Hasta pronto!\n";
     return 0;
 }
 
@@ -307,10 +309,10 @@ int main()
 
 void pausarConsola()
 {
-    std::cout << "\nPresione ENTER para continuar...";
-    if (!std::cin.eof()) {
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cin.get();
+    cout << "\nPresione ENTER para continuar...";
+    if (!cin.eof()) {
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
     }
 }
 
@@ -322,9 +324,9 @@ Equipo* buscarEquipoPorId(SistemaCampeonato &sistema, int idEquipo)
     return nullptr;
 }
 
-std::string sanitizarSQL(const std::string &input)
+string sanitizarSQL(const string &input)
 {
-    std::string res = "";
+    string res = "";
     for (char c : input) {
         if (c == '\'') res += "''";
         else res += c;
@@ -332,12 +334,12 @@ std::string sanitizarSQL(const std::string &input)
     return res;
 }
 
-static std::vector<std::string> dividirLinea(const std::string &s, char delim = '|')
+static vector<string> dividirLinea(const string &s, char delim = '|')
 {
-    std::vector<std::string> tokens;
-    std::string token;
-    std::istringstream tokenStream(s);
-    while (std::getline(tokenStream, token, delim)) {
+    vector<string> tokens;
+    string token;
+    istringstream tokenStream(s);
+    while (getline(tokenStream, token, delim)) {
         tokens.push_back(token);
     }
     return tokens;
@@ -373,7 +375,7 @@ bool dbInicializarYConectar(GestorBD &bd)
     bd.fnSetEnvAttr(bd.env, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
     bd.fnAllocHandle(SQL_HANDLE_DBC, bd.env, &bd.dbc);
 
-    std::vector<std::pair<std::string, std::string>> cadenasConexion = {
+    vector<pair<string, string>> cadenasConexion = {
         {"localhost\\SQLEXPRESS (ODBC 18)", "Driver={ODBC Driver 18 for SQL Server};Server=localhost\\SQLEXPRESS;Database=CampeonatoFutbol;Trusted_Connection=yes;TrustServerCertificate=yes;"},
         {"localhost (ODBC 18)", "Driver={ODBC Driver 18 for SQL Server};Server=localhost;Database=CampeonatoFutbol;Trusted_Connection=yes;TrustServerCertificate=yes;"},
         {"localhost\\SQLEXPRESS (ODBC 17)", "Driver={ODBC Driver 17 for SQL Server};Server=localhost\\SQLEXPRESS;Database=CampeonatoFutbol;Trusted_Connection=yes;"},
@@ -544,8 +546,8 @@ bool dbCargarTodo(SistemaCampeonato &sistema)
         for (auto &p : sistema.partidos) {
             SQLHSTMT sDet;
             if (SQL_SUCCEEDED(bd.fnAllocHandle(SQL_HANDLE_STMT, bd.dbc, &sDet))) {
-                std::string qDet = "SELECT id_equipo, goles_favor, resultado FROM dbo.DETALLE_PARTIDO WHERE id_partido = " +
-                                   std::to_string(p.idPartido) + " ORDER BY id_detalle";
+                string qDet = "SELECT id_equipo, goles_favor, resultado FROM dbo.DETALLE_PARTIDO WHERE id_partido = " +
+                                   to_string(p.idPartido) + " ORDER BY id_detalle";
                 if (SQL_SUCCEEDED(bd.fnExecDirectA(sDet, (SQLCHAR*)qDet.c_str(), SQL_NTS))) {
                     int count = 0;
                     while (bd.fnFetch(sDet) == SQL_SUCCESS) {
@@ -559,7 +561,7 @@ bool dbCargarTodo(SistemaCampeonato &sistema)
                         if (count == 0) {
                             p.idLocal = idEq;
                             p.golesLocal = gf;
-                            if (std::string(res) != "PENDIENTE") p.estado = "FINALIZADO";
+                            if (string(res) != "PENDIENTE") p.estado = "FINALIZADO";
                         } else if (count == 1) {
                             p.idVisitante = idEq;
                             p.golesVisitante = gf;
@@ -796,12 +798,12 @@ bool dbCargarTodo(SistemaCampeonato &sistema)
 bool dbInsertarJugadorEnBD(SistemaCampeonato &sistema, Jugador &j)
 {
     if (!sistema.db.conectada) return false;
-    std::string sql = "INSERT INTO dbo.JUGADOR (id_equipo, nombre, apellido, posicion, numero_camiseta) VALUES (" +
-                      std::to_string(j.idEquipo) + ", '" +
+    string sql = "INSERT INTO dbo.JUGADOR (id_equipo, nombre, apellido, posicion, numero_camiseta) VALUES (" +
+                      to_string(j.idEquipo) + ", '" +
                       sanitizarSQL(j.nombre) + "', '" +
                       sanitizarSQL(j.apellido) + "', '" +
                       sanitizarSQL(j.posicion) + "', " +
-                      std::to_string(j.numeroCamiseta) + "); SELECT SCOPE_IDENTITY();";
+                      to_string(j.numeroCamiseta) + "); SELECT SCOPE_IDENTITY();";
 
     SQLHSTMT stmt;
     if (SQL_SUCCEEDED(sistema.db.fnAllocHandle(SQL_HANDLE_STMT, sistema.db.dbc, &stmt))) {
@@ -822,12 +824,12 @@ bool dbInsertarJugadorEnBD(SistemaCampeonato &sistema, Jugador &j)
 bool dbInsertarPartidoEnBD(SistemaCampeonato &sistema, Partido &p)
 {
     if (!sistema.db.conectada) return false;
-    std::string fStr = p.fecha.empty() ? "2026-05-15 15:00:00" : (p.fecha + " 15:00:00");
-    std::string sql = "INSERT INTO dbo.PARTIDO (id_campeonato, id_division, fecha_partido, jornada, fase) VALUES (" +
-                      std::to_string(p.idCampeonato) + ", " +
-                      std::to_string(p.division) + ", '" +
+    string fStr = p.fecha.empty() ? "2026-05-15 15:00:00" : (p.fecha + " 15:00:00");
+    string sql = "INSERT INTO dbo.PARTIDO (id_campeonato, id_division, fecha_partido, jornada, fase) VALUES (" +
+                      to_string(p.idCampeonato) + ", " +
+                      to_string(p.division) + ", '" +
                       fStr + "', " +
-                      std::to_string(p.jornada) + ", '" +
+                      to_string(p.jornada) + ", '" +
                       p.fase + "'); SELECT SCOPE_IDENTITY();";
 
     SQLHSTMT stmt;
@@ -844,10 +846,10 @@ bool dbInsertarPartidoEnBD(SistemaCampeonato &sistema, Partido &p)
     }
 
     if (p.idPartido > 0) {
-        std::string sqlLoc = "INSERT INTO dbo.DETALLE_PARTIDO (id_partido, id_equipo, goles_favor, goles_contra, puntos_ganados, resultado) VALUES (" +
-                             std::to_string(p.idPartido) + ", " + std::to_string(p.idLocal) + ", 0, 0, 0, 'PENDIENTE');";
-        std::string sqlVis = "INSERT INTO dbo.DETALLE_PARTIDO (id_partido, id_equipo, goles_favor, goles_contra, puntos_ganados, resultado) VALUES (" +
-                             std::to_string(p.idPartido) + ", " + std::to_string(p.idVisitante) + ", 0, 0, 0, 'PENDIENTE');";
+        string sqlLoc = "INSERT INTO dbo.DETALLE_PARTIDO (id_partido, id_equipo, goles_favor, goles_contra, puntos_ganados, resultado) VALUES (" +
+                             to_string(p.idPartido) + ", " + to_string(p.idLocal) + ", 0, 0, 0, 'PENDIENTE');";
+        string sqlVis = "INSERT INTO dbo.DETALLE_PARTIDO (id_partido, id_equipo, goles_favor, goles_contra, puntos_ganados, resultado) VALUES (" +
+                             to_string(p.idPartido) + ", " + to_string(p.idVisitante) + ", 0, 0, 0, 'PENDIENTE');";
         SQLHSTMT sDet;
         if (SQL_SUCCEEDED(sistema.db.fnAllocHandle(SQL_HANDLE_STMT, sistema.db.dbc, &sDet))) {
             sistema.db.fnExecDirectA(sDet, (SQLCHAR*)sqlLoc.c_str(), SQL_NTS);
@@ -866,20 +868,20 @@ bool dbActualizarResultadoPartidoEnBD(SistemaCampeonato &sistema, const Partido 
 
     int ptsLoc = (p.golesLocal > p.golesVisitante) ? 3 : (p.golesLocal == p.golesVisitante ? 1 : 0);
     int ptsVis = (p.golesVisitante > p.golesLocal) ? 3 : (p.golesLocal == p.golesVisitante ? 1 : 0);
-    std::string resLoc = (p.golesLocal > p.golesVisitante) ? "VICTORIA" : (p.golesLocal == p.golesVisitante ? "EMPATE" : "DERROTA");
-    std::string resVis = (p.golesVisitante > p.golesLocal) ? "VICTORIA" : (p.golesLocal == p.golesVisitante ? "EMPATE" : "DERROTA");
+    string resLoc = (p.golesLocal > p.golesVisitante) ? "VICTORIA" : (p.golesLocal == p.golesVisitante ? "EMPATE" : "DERROTA");
+    string resVis = (p.golesVisitante > p.golesLocal) ? "VICTORIA" : (p.golesLocal == p.golesVisitante ? "EMPATE" : "DERROTA");
 
-    std::string sqlUpdLoc = "UPDATE dbo.DETALLE_PARTIDO SET goles_favor = " + std::to_string(p.golesLocal) +
-                            ", goles_contra = " + std::to_string(p.golesVisitante) +
-                            ", puntos_ganados = " + std::to_string(ptsLoc) +
+    string sqlUpdLoc = "UPDATE dbo.DETALLE_PARTIDO SET goles_favor = " + to_string(p.golesLocal) +
+                            ", goles_contra = " + to_string(p.golesVisitante) +
+                            ", puntos_ganados = " + to_string(ptsLoc) +
                             ", resultado = '" + resLoc +
-                            "' WHERE id_partido = " + std::to_string(p.idPartido) + " AND id_equipo = " + std::to_string(p.idLocal);
+                            "' WHERE id_partido = " + to_string(p.idPartido) + " AND id_equipo = " + to_string(p.idLocal);
 
-    std::string sqlUpdVis = "UPDATE dbo.DETALLE_PARTIDO SET goles_favor = " + std::to_string(p.golesVisitante) +
-                            ", goles_contra = " + std::to_string(p.golesLocal) +
-                            ", puntos_ganados = " + std::to_string(ptsVis) +
+    string sqlUpdVis = "UPDATE dbo.DETALLE_PARTIDO SET goles_favor = " + to_string(p.golesVisitante) +
+                            ", goles_contra = " + to_string(p.golesLocal) +
+                            ", puntos_ganados = " + to_string(ptsVis) +
                             ", resultado = '" + resVis +
-                            "' WHERE id_partido = " + std::to_string(p.idPartido) + " AND id_equipo = " + std::to_string(p.idVisitante);
+                            "' WHERE id_partido = " + to_string(p.idPartido) + " AND id_equipo = " + to_string(p.idVisitante);
 
     SQLHSTMT stmt;
     if (SQL_SUCCEEDED(sistema.db.fnAllocHandle(SQL_HANDLE_STMT, sistema.db.dbc, &stmt))) {
@@ -889,9 +891,9 @@ bool dbActualizarResultadoPartidoEnBD(SistemaCampeonato &sistema, const Partido 
         sistema.db.fnCloseCursor(stmt);
 
         // Limpiar incidencias previas para este partido
-        std::string delG = "DELETE FROM dbo.REGISTRO_GOLES WHERE id_partido = " + std::to_string(p.idPartido);
-        std::string delT = "DELETE FROM dbo.TARJETAS_ACUMULADAS WHERE id_partido = " + std::to_string(p.idPartido);
-        std::string delP = "DELETE FROM dbo.CONTROL_PORTEROS WHERE id_partido = " + std::to_string(p.idPartido);
+        string delG = "DELETE FROM dbo.REGISTRO_GOLES WHERE id_partido = " + to_string(p.idPartido);
+        string delT = "DELETE FROM dbo.TARJETAS_ACUMULADAS WHERE id_partido = " + to_string(p.idPartido);
+        string delP = "DELETE FROM dbo.CONTROL_PORTEROS WHERE id_partido = " + to_string(p.idPartido);
         sistema.db.fnExecDirectA(stmt, (SQLCHAR*)delG.c_str(), SQL_NTS);
         sistema.db.fnCloseCursor(stmt);
         sistema.db.fnExecDirectA(stmt, (SQLCHAR*)delT.c_str(), SQL_NTS);
@@ -901,12 +903,12 @@ bool dbActualizarResultadoPartidoEnBD(SistemaCampeonato &sistema, const Partido 
 
         // Insertar Goles
         for (const auto &g : p.goles) {
-            std::string sqlGol = "INSERT INTO dbo.REGISTRO_GOLES (id_partido, id_jugador, id_portero_vencido, id_equipo_rival, minuto, es_autogol) VALUES (" +
-                                 std::to_string(p.idPartido) + ", " +
-                                 std::to_string(g.idJugador) + ", " +
-                                 (g.idPorteroVencido > 0 ? std::to_string(g.idPorteroVencido) : "NULL") + ", " +
-                                 std::to_string(g.idEquipoRival) + ", " +
-                                 std::to_string(g.minuto) + ", " +
+            string sqlGol = "INSERT INTO dbo.REGISTRO_GOLES (id_partido, id_jugador, id_portero_vencido, id_equipo_rival, minuto, es_autogol) VALUES (" +
+                                 to_string(p.idPartido) + ", " +
+                                 to_string(g.idJugador) + ", " +
+                                 (g.idPorteroVencido > 0 ? to_string(g.idPorteroVencido) : "NULL") + ", " +
+                                 to_string(g.idEquipoRival) + ", " +
+                                 to_string(g.minuto) + ", " +
                                  (g.esAutogol ? "1" : "0") + ");";
             sistema.db.fnExecDirectA(stmt, (SQLCHAR*)sqlGol.c_str(), SQL_NTS);
             sistema.db.fnCloseCursor(stmt);
@@ -914,24 +916,24 @@ bool dbActualizarResultadoPartidoEnBD(SistemaCampeonato &sistema, const Partido 
 
         // Insertar Tarjetas
         for (const auto &t : p.tarjetas) {
-            std::string sqlTar = "INSERT INTO dbo.TARJETAS_ACUMULADAS (id_partido, id_jugador, tipo_tarjeta, minuto) VALUES (" +
-                                 std::to_string(p.idPartido) + ", " +
-                                 std::to_string(t.idJugador) + ", '" +
+            string sqlTar = "INSERT INTO dbo.TARJETAS_ACUMULADAS (id_partido, id_jugador, tipo_tarjeta, minuto) VALUES (" +
+                                 to_string(p.idPartido) + ", " +
+                                 to_string(t.idJugador) + ", '" +
                                  t.tipoTarjeta + "', " +
-                                 std::to_string(t.minuto) + ");";
+                                 to_string(t.minuto) + ");";
             sistema.db.fnExecDirectA(stmt, (SQLCHAR*)sqlTar.c_str(), SQL_NTS);
             sistema.db.fnCloseCursor(stmt);
         }
 
         // Insertar Porteros
         for (const auto &cp : p.porteros) {
-            std::string sqlPor = "INSERT INTO dbo.CONTROL_PORTEROS (id_partido, id_jugador, id_equipo, minuto_entrada, minuto_salida, goles_recibidos) VALUES (" +
-                                 std::to_string(p.idPartido) + ", " +
-                                 std::to_string(cp.idJugador) + ", " +
-                                 std::to_string(cp.idEquipo) + ", " +
-                                 std::to_string(cp.minutoEntrada) + ", " +
-                                 std::to_string(cp.minutoSalida) + ", " +
-                                 std::to_string(cp.golesRecibidos) + ");";
+            string sqlPor = "INSERT INTO dbo.CONTROL_PORTEROS (id_partido, id_jugador, id_equipo, minuto_entrada, minuto_salida, goles_recibidos) VALUES (" +
+                                 to_string(p.idPartido) + ", " +
+                                 to_string(cp.idJugador) + ", " +
+                                 to_string(cp.idEquipo) + ", " +
+                                 to_string(cp.minutoEntrada) + ", " +
+                                 to_string(cp.minutoSalida) + ", " +
+                                 to_string(cp.golesRecibidos) + ");";
             sistema.db.fnExecDirectA(stmt, (SQLCHAR*)sqlPor.c_str(), SQL_NTS);
             sistema.db.fnCloseCursor(stmt);
         }
@@ -945,8 +947,8 @@ bool dbActualizarResultadoPartidoEnBD(SistemaCampeonato &sistema, const Partido 
 bool dbActualizarDivisionEquipoEnBD(SistemaCampeonato &sistema, int idEquipo, int nuevaDivision)
 {
     if (!sistema.db.conectada) return false;
-    std::string sql = "UPDATE dbo.EQUIPO SET id_division = " + std::to_string(nuevaDivision) +
-                      " WHERE id_equipo = " + std::to_string(idEquipo);
+    string sql = "UPDATE dbo.EQUIPO SET id_division = " + to_string(nuevaDivision) +
+                      " WHERE id_equipo = " + to_string(idEquipo);
     SQLHSTMT stmt;
     if (SQL_SUCCEEDED(sistema.db.fnAllocHandle(SQL_HANDLE_STMT, sistema.db.dbc, &stmt))) {
         sistema.db.fnExecDirectA(stmt, (SQLCHAR*)sql.c_str(), SQL_NTS);
@@ -959,11 +961,11 @@ bool dbActualizarDivisionEquipoEnBD(SistemaCampeonato &sistema, int idEquipo, in
 bool dbInsertarHistorialEnBD(SistemaCampeonato &sistema, const HistorialMovimiento &h)
 {
     if (!sistema.db.conectada) return false;
-    std::string sql = "INSERT INTO dbo.HISTORIAL_ASCENSO_DESCENSO (id_campeonato, id_equipo, id_division_origen, id_division_destino, tipo_movimiento) VALUES (" +
-                      std::to_string(h.idCampeonato) + ", " +
-                      std::to_string(h.idEquipo) + ", " +
-                      std::to_string(h.origen) + ", " +
-                      std::to_string(h.destino) + ", '" +
+    string sql = "INSERT INTO dbo.HISTORIAL_ASCENSO_DESCENSO (id_campeonato, id_equipo, id_division_origen, id_division_destino, tipo_movimiento) VALUES (" +
+                      to_string(h.idCampeonato) + ", " +
+                      to_string(h.idEquipo) + ", " +
+                      to_string(h.origen) + ", " +
+                      to_string(h.destino) + ", '" +
                       h.tipoMovimiento + "');";
     SQLHSTMT stmt;
     if (SQL_SUCCEEDED(sistema.db.fnAllocHandle(SQL_HANDLE_STMT, sistema.db.dbc, &stmt))) {
@@ -977,16 +979,16 @@ bool dbInsertarHistorialEnBD(SistemaCampeonato &sistema, const HistorialMovimien
 bool dbGuardarPremiacionEnBD(SistemaCampeonato &sistema, const Premiacion &prem, int idGoleador, int idPortero, int idCampeon)
 {
     if (!sistema.db.conectada) return false;
-    std::string sql = "IF EXISTS (SELECT 1 FROM dbo.PREMIACION WHERE id_campeonato = " + std::to_string(prem.idTorneo) + ") " +
-                      "UPDATE dbo.PREMIACION SET id_jugador_goleador = " + (idGoleador > 0 ? std::to_string(idGoleador) : "1") +
-                      ", id_portero_menos_vencido = " + (idPortero > 0 ? std::to_string(idPortero) : "1") +
-                      ", id_equipo_campeon = " + (idCampeon > 0 ? std::to_string(idCampeon) : "NULL") +
-                      " WHERE id_campeonato = " + std::to_string(prem.idTorneo) + "; " +
+    string sql = "IF EXISTS (SELECT 1 FROM dbo.PREMIACION WHERE id_campeonato = " + to_string(prem.idTorneo) + ") " +
+                      "UPDATE dbo.PREMIACION SET id_jugador_goleador = " + (idGoleador > 0 ? to_string(idGoleador) : "1") +
+                      ", id_portero_menos_vencido = " + (idPortero > 0 ? to_string(idPortero) : "1") +
+                      ", id_equipo_campeon = " + (idCampeon > 0 ? to_string(idCampeon) : "NULL") +
+                      " WHERE id_campeonato = " + to_string(prem.idTorneo) + "; " +
                       "ELSE INSERT INTO dbo.PREMIACION (id_campeonato, id_jugador_goleador, id_portero_menos_vencido, id_equipo_campeon) VALUES (" +
-                      std::to_string(prem.idTorneo) + ", " +
-                      (idGoleador > 0 ? std::to_string(idGoleador) : "1") + ", " +
-                      (idPortero > 0 ? std::to_string(idPortero) : "1") + ", " +
-                      (idCampeon > 0 ? std::to_string(idCampeon) : "NULL") + ");";
+                      to_string(prem.idTorneo) + ", " +
+                      (idGoleador > 0 ? to_string(idGoleador) : "1") + ", " +
+                      (idPortero > 0 ? to_string(idPortero) : "1") + ", " +
+                      (idCampeon > 0 ? to_string(idCampeon) : "NULL") + ");";
     SQLHSTMT stmt;
     if (SQL_SUCCEEDED(sistema.db.fnAllocHandle(SQL_HANDLE_STMT, sistema.db.dbc, &stmt))) {
         sistema.db.fnExecDirectA(stmt, (SQLCHAR*)sql.c_str(), SQL_NTS);
@@ -999,12 +1001,12 @@ bool dbGuardarPremiacionEnBD(SistemaCampeonato &sistema, const Premiacion &prem,
 bool dbInsertarUsuarioEnBD(SistemaCampeonato &sistema, const Usuario &u)
 {
     if (!sistema.db.conectada) return false;
-    std::string correo = u.usuario + "@campeonato.gt";
-    std::string sql = "INSERT INTO dbo.USUARIO (nombre_usuario, correo, contrasena_hash, activo, id_rol, usuario) VALUES ('" +
+    string correo = u.usuario + "@campeonato.gt";
+    string sql = "INSERT INTO dbo.USUARIO (nombre_usuario, correo, contrasena_hash, activo, id_rol, usuario) VALUES ('" +
                       sanitizarSQL(u.nombreCompleto) + "', '" +
                       correo + "', '" +
                       sanitizarSQL(u.contrasena) + "', 1, " +
-                      std::to_string(u.rol) + ", '" +
+                      to_string(u.rol) + ", '" +
                       sanitizarSQL(u.usuario) + "');";
     SQLHSTMT stmt;
     if (SQL_SUCCEEDED(sistema.db.fnAllocHandle(SQL_HANDLE_STMT, sistema.db.dbc, &stmt))) {
@@ -1018,10 +1020,10 @@ bool dbInsertarUsuarioEnBD(SistemaCampeonato &sistema, const Usuario &u)
 bool dbInsertarEquipoEnBD(SistemaCampeonato &sistema, Equipo &eq)
 {
     if (!sistema.db.conectada) return false;
-    std::string sql = "INSERT INTO dbo.EQUIPO (nombre_equipo, id_division, id_campeonato) VALUES ('" +
+    string sql = "INSERT INTO dbo.EQUIPO (nombre_equipo, id_division, id_campeonato) VALUES ('" +
                       sanitizarSQL(eq.nombre) + "', " +
-                      std::to_string(eq.division) + ", " +
-                      std::to_string(eq.idCampeonato) + "); SELECT SCOPE_IDENTITY();";
+                      to_string(eq.division) + ", " +
+                      to_string(eq.idCampeonato) + "); SELECT SCOPE_IDENTITY();";
     SQLHSTMT stmt;
     if (SQL_SUCCEEDED(sistema.db.fnAllocHandle(SQL_HANDLE_STMT, sistema.db.dbc, &stmt))) {
         if (SQL_SUCCEEDED(sistema.db.fnExecDirectA(stmt, (SQLCHAR*)sql.c_str(), SQL_NTS))) {
@@ -1041,14 +1043,14 @@ bool dbInsertarEquipoEnBD(SistemaCampeonato &sistema, Equipo &eq)
 bool dbCrearTorneoEnBD(SistemaCampeonato &sistema, Torneo &t)
 {
     if (!sistema.db.conectada) return false;
-    std::string fIni = t.fechaInicio.empty() ? "2026-01-10" : t.fechaInicio;
-    std::string fFin = t.fechaFin.empty() ? "2026-05-30" : t.fechaFin;
-    std::string sql = "INSERT INTO dbo.CAMPEONATO (nombre_campeonato, fecha_inicio, fecha_fin, max_equipos_mayor, max_equipos_menor) VALUES ('" +
+    string fIni = t.fechaInicio.empty() ? "2026-01-10" : t.fechaInicio;
+    string fFin = t.fechaFin.empty() ? "2026-05-30" : t.fechaFin;
+    string sql = "INSERT INTO dbo.CAMPEONATO (nombre_campeonato, fecha_inicio, fecha_fin, max_equipos_mayor, max_equipos_menor) VALUES ('" +
                       sanitizarSQL(t.nombre) + "', '" +
                       fIni + "', '" +
                       fFin + "', " +
-                      std::to_string(t.maxMayor) + ", " +
-                      std::to_string(t.maxMenor) + "); SELECT SCOPE_IDENTITY();";
+                      to_string(t.maxMayor) + ", " +
+                      to_string(t.maxMenor) + "); SELECT SCOPE_IDENTITY();";
     SQLHSTMT stmt;
     if (SQL_SUCCEEDED(sistema.db.fnAllocHandle(SQL_HANDLE_STMT, sistema.db.dbc, &stmt))) {
         if (SQL_SUCCEEDED(sistema.db.fnExecDirectA(stmt, (SQLCHAR*)sql.c_str(), SQL_NTS))) {
@@ -1100,24 +1102,24 @@ void inicializarSistema(SistemaCampeonato &sistema)
     sistema.autoIncPartido = 1;
     sistema.autoIncHistorial = 1;
 
-    std::cout << "[BD] Conectando a Base de Datos SQL Server 'CampeonatoFutbol' en localhost...\n";
+    cout << "[BD] Conectando a Base de Datos SQL Server 'CampeonatoFutbol' en localhost...\n";
     if (dbInicializarYConectar(sistema.db)) {
-        std::cout << "[OK] Conectado exitosamente: " << sistema.db.servidorConectado << "\n";
-        std::cout << "[BD] Sincronizando datos desde SQL Server...\n";
+        cout << "[OK] Conectado exitosamente: " << sistema.db.servidorConectado << "\n";
+        cout << "[BD] Sincronizando datos desde SQL Server...\n";
         if (dbCargarTodo(sistema)) {
-            std::cout << "[OK] ¡Datos sincronizados directamente desde la Base de Datos!\n";
-            std::cout << "     - Torneos activos: " << sistema.torneos.size() << "\n";
-            std::cout << "     - Equipos en liga: " << sistema.equipos.size() << "\n";
+            cout << "[OK] ¡Datos sincronizados directamente desde la Base de Datos!\n";
+            cout << "     - Torneos activos: " << sistema.torneos.size() << "\n";
+            cout << "     - Equipos en liga: " << sistema.equipos.size() << "\n";
             int totalJug = 0;
             for (const auto &eq : sistema.equipos) totalJug += eq.jugadores.size();
-            std::cout << "     - Jugadores en plantilla: " << totalJug << "\n";
-            std::cout << "     - Partidos registrados: " << sistema.partidos.size() << "\n";
-            std::cout << "     - Usuarios en sistema: " << sistema.usuarios.size() << "\n";
+            cout << "     - Jugadores en plantilla: " << totalJug << "\n";
+            cout << "     - Partidos registrados: " << sistema.partidos.size() << "\n";
+            cout << "     - Usuarios en sistema: " << sistema.usuarios.size() << "\n";
             return;
         }
     }
 
-    std::cout << "[AVISO] Base de datos no disponible. Utilizando persistencia en archivo local.\n";
+    cout << "[AVISO] Base de datos no disponible. Utilizando persistencia en archivo local.\n";
     if (!cargarDatosDesdeArchivo(sistema)) {
         inicializarDatosSemilla(sistema);
         guardarDatosEnArchivo(sistema);
@@ -1153,7 +1155,7 @@ void inicializarDatosSemilla(SistemaCampeonato &sistema)
     sistema.torneos.push_back(t);
     sistema.idTorneoActivo = t.idTorneo;
 
-    std::vector<std::string> mayor = {
+    vector<string> mayor = {
         "CSD Municipal", "Comunicaciones FC", "Antigua GFC", "Cobán Imperial",
         "Xelajú MC", "Deportivo Guastatoya", "Deportivo Malacateco", "Deportivo Mixco",
         "Xinabajul Huehue", "Deportivo Achuapa", "Deportivo Marquense", "CSD Zacapa"
@@ -1189,7 +1191,7 @@ void inicializarDatosSemilla(SistemaCampeonato &sistema)
         sistema.equipos.push_back(eq);
     }
 
-    std::vector<std::string> menor = {
+    vector<string> menor = {
         "Deportivo San Pedro", "Universidad SC", "Aurora FC", "Juventud Pinulteca",
         "Deportivo Iztapa", "Santa Lucía Cotzumalguapa", "Deportivo Suchitepéquez", "Deportivo Coatepeque",
         "Quiché FC", "Deportivo Carchá", "Deportivo Mictlán", "Nueva Concepción"
@@ -1222,9 +1224,9 @@ void inicializarDatosSemilla(SistemaCampeonato &sistema)
     }
 }
 
-bool guardarDatosEnArchivo(const SistemaCampeonato &sistema, const std::string &ruta)
+bool guardarDatosEnArchivo(const SistemaCampeonato &sistema, const string &ruta)
 {
-    std::ofstream out(ruta);
+    ofstream out(ruta);
     if (!out.is_open()) return false;
 
     out << "[CONFIG]\n";
@@ -1312,13 +1314,13 @@ bool guardarDatosEnArchivo(const SistemaCampeonato &sistema, const std::string &
     return true;
 }
 
-bool cargarDatosDesdeArchivo(SistemaCampeonato &sistema, const std::string &ruta)
+bool cargarDatosDesdeArchivo(SistemaCampeonato &sistema, const string &ruta)
 {
-    std::ifstream in(ruta);
+    ifstream in(ruta);
     if (!in.is_open()) return false;
 
-    std::string linea;
-    std::string seccion = "";
+    string linea;
+    string seccion = "";
 
     sistema.usuarios.clear();
     sistema.torneos.clear();
@@ -1327,84 +1329,84 @@ bool cargarDatosDesdeArchivo(SistemaCampeonato &sistema, const std::string &ruta
     sistema.historial.clear();
     sistema.premiaciones.clear();
 
-    while (std::getline(in, linea)) {
+    while (getline(in, linea)) {
         if (linea.empty() || linea[0] == '#') continue;
         if (linea.front() == '[' && linea.back() == ']') {
             seccion = linea;
             continue;
         }
 
-        std::vector<std::string> t = dividirLinea(linea, '|');
+        vector<string> t = dividirLinea(linea, '|');
 
         if (seccion == "[CONFIG]" && t.size() >= 7) {
-            sistema.idTorneoActivo = std::stoi(t[0]);
-            sistema.autoIncUsuario = std::stoi(t[1]);
-            sistema.autoIncTorneo = std::stoi(t[2]);
-            sistema.autoIncEquipo = std::stoi(t[3]);
-            sistema.autoIncJugador = std::stoi(t[4]);
-            sistema.autoIncPartido = std::stoi(t[5]);
-            sistema.autoIncHistorial = std::stoi(t[6]);
+            sistema.idTorneoActivo = stoi(t[0]);
+            sistema.autoIncUsuario = stoi(t[1]);
+            sistema.autoIncTorneo = stoi(t[2]);
+            sistema.autoIncEquipo = stoi(t[3]);
+            sistema.autoIncJugador = stoi(t[4]);
+            sistema.autoIncPartido = stoi(t[5]);
+            sistema.autoIncHistorial = stoi(t[6]);
         } else if (seccion == "[USUARIOS]" && t.size() >= 5) {
             Usuario u;
-            u.idUsuario = std::stoi(t[0]);
+            u.idUsuario = stoi(t[0]);
             u.usuario = t[1];
             u.contrasena = t[2];
             u.nombreCompleto = t[3];
-            u.rol = (RolUsuario)std::stoi(t[4]);
+            u.rol = (RolUsuario)stoi(t[4]);
             sistema.usuarios.push_back(u);
         } else if (seccion == "[TORNEOS]" && t.size() >= 7) {
             Torneo tor;
-            tor.idTorneo = std::stoi(t[0]);
+            tor.idTorneo = stoi(t[0]);
             tor.nombre = t[1];
             tor.fechaInicio = t[2];
             tor.fechaFin = t[3];
-            tor.maxMayor = std::stoi(t[4]);
-            tor.maxMenor = std::stoi(t[5]);
+            tor.maxMayor = stoi(t[4]);
+            tor.maxMenor = stoi(t[5]);
             tor.finalizado = (t[6] == "1");
             sistema.torneos.push_back(tor);
         } else if (seccion == "[EQUIPOS]" && t.size() >= 4) {
             Equipo eq;
-            eq.idEquipo = std::stoi(t[0]);
+            eq.idEquipo = stoi(t[0]);
             eq.nombre = t[1];
-            eq.division = (DivisionLiga)std::stoi(t[2]);
-            eq.idCampeonato = std::stoi(t[3]);
+            eq.division = (DivisionLiga)stoi(t[2]);
+            eq.idCampeonato = stoi(t[3]);
             sistema.equipos.push_back(eq);
         } else if (seccion == "[JUGADORES]" && t.size() >= 6) {
             Jugador j;
-            j.idJugador = std::stoi(t[0]);
-            j.idEquipo = std::stoi(t[1]);
+            j.idJugador = stoi(t[0]);
+            j.idEquipo = stoi(t[1]);
             j.nombre = t[2];
             j.apellido = t[3];
             j.posicion = t[4];
-            j.numeroCamiseta = std::stoi(t[5]);
+            j.numeroCamiseta = stoi(t[5]);
             Equipo *eq = buscarEquipoPorId(sistema, j.idEquipo);
             if (eq) eq->jugadores.push_back(j);
         } else if (seccion == "[PARTIDOS]" && t.size() >= 13) {
             Partido p;
-            p.idPartido = std::stoi(t[0]);
-            p.idCampeonato = std::stoi(t[1]);
-            p.division = (DivisionLiga)std::stoi(t[2]);
+            p.idPartido = stoi(t[0]);
+            p.idCampeonato = stoi(t[1]);
+            p.division = (DivisionLiga)stoi(t[2]);
             p.fase = t[3];
-            p.jornada = std::stoi(t[4]);
+            p.jornada = stoi(t[4]);
             p.fecha = t[5];
-            p.idLocal = std::stoi(t[6]);
+            p.idLocal = stoi(t[6]);
             p.nombreLocal = t[7];
-            p.golesLocal = std::stoi(t[8]);
-            p.idVisitante = std::stoi(t[9]);
+            p.golesLocal = stoi(t[8]);
+            p.idVisitante = stoi(t[9]);
             p.nombreVisitante = t[10];
-            p.golesVisitante = std::stoi(t[11]);
+            p.golesVisitante = stoi(t[11]);
             p.estado = t[12];
             sistema.partidos.push_back(p);
         } else if (seccion == "[GOLES]" && t.size() >= 9) {
-            int idPart = std::stoi(t[0]);
+            int idPart = stoi(t[0]);
             IncidenciaGol g;
-            g.idJugador = std::stoi(t[1]);
+            g.idJugador = stoi(t[1]);
             g.nombreJugador = t[2];
-            g.idEquipoRival = std::stoi(t[3]);
+            g.idEquipoRival = stoi(t[3]);
             g.nombreEquipoRival = t[4];
-            g.idPorteroVencido = std::stoi(t[5]);
+            g.idPorteroVencido = stoi(t[5]);
             g.nombrePorteroVencido = t[6];
-            g.minuto = std::stoi(t[7]);
+            g.minuto = stoi(t[7]);
             g.esAutogol = (t[8] == "1");
             for (auto &part : sistema.partidos) {
                 if (part.idPartido == idPart) {
@@ -1413,12 +1415,12 @@ bool cargarDatosDesdeArchivo(SistemaCampeonato &sistema, const std::string &ruta
                 }
             }
         } else if (seccion == "[TARJETAS]" && t.size() >= 5) {
-            int idPart = std::stoi(t[0]);
+            int idPart = stoi(t[0]);
             IncidenciaTarjeta tar;
-            tar.idJugador = std::stoi(t[1]);
+            tar.idJugador = stoi(t[1]);
             tar.nombreJugador = t[2];
             tar.tipoTarjeta = t[3];
-            tar.minuto = std::stoi(t[4]);
+            tar.minuto = stoi(t[4]);
             for (auto &part : sistema.partidos) {
                 if (part.idPartido == idPart) {
                     part.tarjetas.push_back(tar);
@@ -1426,14 +1428,14 @@ bool cargarDatosDesdeArchivo(SistemaCampeonato &sistema, const std::string &ruta
                 }
             }
         } else if (seccion == "[PORTEROS]" && t.size() >= 7) {
-            int idPart = std::stoi(t[0]);
+            int idPart = stoi(t[0]);
             ControlPortero cp;
-            cp.idJugador = std::stoi(t[1]);
+            cp.idJugador = stoi(t[1]);
             cp.nombrePortero = t[2];
-            cp.idEquipo = std::stoi(t[3]);
-            cp.minutoEntrada = std::stoi(t[4]);
-            cp.minutoSalida = std::stoi(t[5]);
-            cp.golesRecibidos = std::stoi(t[6]);
+            cp.idEquipo = stoi(t[3]);
+            cp.minutoEntrada = stoi(t[4]);
+            cp.minutoSalida = stoi(t[5]);
+            cp.golesRecibidos = stoi(t[6]);
             for (auto &part : sistema.partidos) {
                 if (part.idPartido == idPart) {
                     part.porteros.push_back(cp);
@@ -1442,24 +1444,24 @@ bool cargarDatosDesdeArchivo(SistemaCampeonato &sistema, const std::string &ruta
             }
         } else if (seccion == "[HISTORIAL]" && t.size() >= 8) {
             HistorialMovimiento h;
-            h.idHistorial = std::stoi(t[0]);
-            h.idCampeonato = std::stoi(t[1]);
-            h.idEquipo = std::stoi(t[2]);
+            h.idHistorial = stoi(t[0]);
+            h.idCampeonato = stoi(t[1]);
+            h.idEquipo = stoi(t[2]);
             h.nombreEquipo = t[3];
-            h.origen = (DivisionLiga)std::stoi(t[4]);
-            h.destino = (DivisionLiga)std::stoi(t[5]);
+            h.origen = (DivisionLiga)stoi(t[4]);
+            h.destino = (DivisionLiga)stoi(t[5]);
             h.tipoMovimiento = t[6];
             h.fecha = t[7];
             sistema.historial.push_back(h);
         } else if (seccion == "[PREMIACIONES]" && t.size() >= 9) {
             Premiacion pr;
-            pr.idTorneo = std::stoi(t[0]);
+            pr.idTorneo = stoi(t[0]);
             pr.campeonMayor = t[1];
             pr.campeonMenor = t[2];
             pr.maximoGoleador = t[3];
-            pr.golesAnotados = std::stoi(t[4]);
+            pr.golesAnotados = stoi(t[4]);
             pr.porteroMenosVencido = t[5];
-            pr.golesRecibidos = std::stoi(t[6]);
+            pr.golesRecibidos = stoi(t[6]);
             pr.habilitada = (t[7] == "1");
             pr.registrada = (t[8] == "1");
             sistema.premiaciones.push_back(pr);
@@ -1476,21 +1478,21 @@ bool cargarDatosDesdeArchivo(SistemaCampeonato &sistema, const std::string &ruta
 
 void crearTorneo(SistemaCampeonato &sistema)
 {
-    std::cout << "\n=======================================================\n";
-    std::cout << "               CREAR NUEVO TORNEO DE FUTBOL            \n";
-    std::cout << "=======================================================\n";
+    cout << "\n=======================================================\n";
+    cout << "               CREAR NUEVO TORNEO DE FUTBOL            \n";
+    cout << "=======================================================\n";
 
     Torneo nuevo;
     nuevo.idTorneo = sistema.autoIncTorneo++;
 
-    std::cout << "Nombre del Torneo (ej. Clausura 2026): ";
-    std::getline(std::cin >> std::ws, nuevo.nombre);
+    cout << "Nombre del Torneo (ej. Clausura 2026): ";
+    getline(cin >> ws, nuevo.nombre);
 
-    std::cout << "Fecha de Inicio (YYYY-MM-DD): ";
-    std::getline(std::cin, nuevo.fechaInicio);
+    cout << "Fecha de Inicio (YYYY-MM-DD): ";
+    getline(cin, nuevo.fechaInicio);
 
-    std::cout << "Fecha Estimada de Finalización (YYYY-MM-DD): ";
-    std::getline(std::cin, nuevo.fechaFin);
+    cout << "Fecha Estimada de Finalización (YYYY-MM-DD): ";
+    getline(cin, nuevo.fechaFin);
 
     nuevo.maxMayor = 12;
     nuevo.maxMenor = 12;
@@ -1500,23 +1502,23 @@ void crearTorneo(SistemaCampeonato &sistema)
     sistema.torneos.push_back(nuevo);
     sistema.idTorneoActivo = nuevo.idTorneo;
 
-    std::cout << "\n[OK] Torneo '" << nuevo.nombre << "' creado y activado con éxito (ID: " << nuevo.idTorneo << ").\n";
+    cout << "\n[OK] Torneo '" << nuevo.nombre << "' creado y activado con éxito (ID: " << nuevo.idTorneo << ").\n";
     pausarConsola();
 }
 
 void listarTorneos(const SistemaCampeonato &sistema)
 {
-    std::cout << "\n=======================================================\n";
-    std::cout << "                  TORNEOS REGISTRADOS                  \n";
-    std::cout << "=======================================================\n";
+    cout << "\n=======================================================\n";
+    cout << "                  TORNEOS REGISTRADOS                  \n";
+    cout << "=======================================================\n";
     if (sistema.torneos.empty()) {
-        std::cout << "No hay torneos registrados en el sistema.\n";
+        cout << "No hay torneos registrados en el sistema.\n";
         return;
     }
 
     for (const auto &t : sistema.torneos) {
-        std::cout << "ID: " << std::setw(3) << t.idTorneo
-                  << " | " << std::setw(25) << std::left << t.nombre
+        cout << "ID: " << setw(3) << t.idTorneo
+                  << " | " << setw(25) << left << t.nombre
                   << " | Inicio: " << t.fechaInicio
                   << " | Fin: " << t.fechaFin
                   << " | Estado: " << (t.finalizado ? "FINALIZADO" : "ACTIVO")
@@ -1527,40 +1529,40 @@ void listarTorneos(const SistemaCampeonato &sistema)
 void seleccionarTorneoActivo(SistemaCampeonato &sistema)
 {
     listarTorneos(sistema);
-    std::cout << "\nIngrese el ID del Torneo que desea seleccionar como ACTIVO: ";
+    cout << "\nIngrese el ID del Torneo que desea seleccionar como ACTIVO: ";
     int idSel;
-    std::cin >> idSel;
+    cin >> idSel;
 
     bool hallado = false;
     for (const auto &t : sistema.torneos) {
         if (t.idTorneo == idSel) {
             sistema.idTorneoActivo = t.idTorneo;
             hallado = true;
-            std::cout << "\n[OK] Torneo '" << t.nombre << "' establecido como ACTIVO.\n";
+            cout << "\n[OK] Torneo '" << t.nombre << "' establecido como ACTIVO.\n";
             break;
         }
     }
     if (!hallado) {
-        std::cout << "\n[ERROR] El ID de torneo seleccionado no existe.\n";
+        cout << "\n[ERROR] El ID de torneo seleccionado no existe.\n";
     }
     pausarConsola();
 }
 
 void registrarEquipo(SistemaCampeonato &sistema)
 {
-    std::cout << "\n=======================================================\n";
-    std::cout << "                  REGISTRAR NUEVO EQUIPO               \n";
-    std::cout << "=======================================================\n";
+    cout << "\n=======================================================\n";
+    cout << "                  REGISTRAR NUEVO EQUIPO               \n";
+    cout << "=======================================================\n";
 
-    std::cout << "Seleccione la Liga / División:\n";
-    std::cout << "1. Liga Mayor (Máximo 12 equipos)\n";
-    std::cout << "2. Liga Menor (Máximo 12 equipos)\n";
-    std::cout << "Opción: ";
+    cout << "Seleccione la Liga / División:\n";
+    cout << "1. Liga Mayor (Máximo 12 equipos)\n";
+    cout << "2. Liga Menor (Máximo 12 equipos)\n";
+    cout << "Opción: ";
     int opcDiv;
-    std::cin >> opcDiv;
+    cin >> opcDiv;
 
     if (opcDiv != 1 && opcDiv != 2) {
-        std::cout << "[ERROR] División no válida.\n";
+        cout << "[ERROR] División no válida.\n";
         pausarConsola();
         return;
     }
@@ -1575,7 +1577,7 @@ void registrarEquipo(SistemaCampeonato &sistema)
     }
 
     if (totalActual >= 12) {
-        std::cout << "\n[!] ATENCIÓN: La división seleccionada ya alcanzó el límite máximo reglamentario de 12 equipos.\n";
+        cout << "\n[!] ATENCIÓN: La división seleccionada ya alcanzó el límite máximo reglamentario de 12 equipos.\n";
         pausarConsola();
         return;
     }
@@ -1585,12 +1587,12 @@ void registrarEquipo(SistemaCampeonato &sistema)
     nuevo.division = div;
     nuevo.idCampeonato = sistema.idTorneoActivo;
 
-    std::cout << "Nombre Oficial del Equipo: ";
-    std::getline(std::cin >> std::ws, nuevo.nombre);
+    cout << "Nombre Oficial del Equipo: ";
+    getline(cin >> ws, nuevo.nombre);
 
     for (const auto &eq : sistema.equipos) {
         if (eq.idCampeonato == sistema.idTorneoActivo && eq.nombre == nuevo.nombre) {
-            std::cout << "\n[ERROR] Ya existe un equipo con ese nombre en el campeonato actual.\n";
+            cout << "\n[ERROR] Ya existe un equipo con ese nombre en el campeonato actual.\n";
             pausarConsola();
             return;
         }
@@ -1599,41 +1601,41 @@ void registrarEquipo(SistemaCampeonato &sistema)
     dbInsertarEquipoEnBD(sistema, nuevo);
     sistema.equipos.push_back(nuevo);
 
-    std::cout << "\n[OK] Equipo '" << nuevo.nombre << "' registrado exitosamente (ID: "
+    cout << "\n[OK] Equipo '" << nuevo.nombre << "' registrado exitosamente (ID: "
               << nuevo.idEquipo << ") en " << (div == LIGA_MAYOR ? "Liga Mayor" : "Liga Menor") << ".\n";
     pausarConsola();
 }
 
 void registrarJugador(SistemaCampeonato &sistema)
 {
-    std::cout << "\n=======================================================\n";
-    std::cout << "       REGISTRAR JUGADOR EN PLANTILLA DE EQUIPO        \n";
-    std::cout << "=======================================================\n";
+    cout << "\n=======================================================\n";
+    cout << "       REGISTRAR JUGADOR EN PLANTILLA DE EQUIPO        \n";
+    cout << "=======================================================\n";
 
-    std::cout << "Seleccione la Liga:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
+    cout << "Seleccione la Liga:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
     int opcDiv;
-    std::cin >> opcDiv;
+    cin >> opcDiv;
     DivisionLiga div = (opcDiv == 1) ? LIGA_MAYOR : LIGA_MENOR;
 
-    std::cout << "\nEquipos disponibles:\n";
-    std::vector<int> idsValidos;
+    cout << "\nEquipos disponibles:\n";
+    vector<int> idsValidos;
     for (const auto &eq : sistema.equipos) {
         if (eq.idCampeonato == sistema.idTorneoActivo && eq.division == div) {
-            std::cout << "ID: " << std::setw(3) << eq.idEquipo << " - " << std::left << std::setw(28) << eq.nombre
+            cout << "ID: " << setw(3) << eq.idEquipo << " - " << left << setw(28) << eq.nombre
                       << " (" << eq.jugadores.size() << " jugadores registrados)\n";
             idsValidos.push_back(eq.idEquipo);
         }
     }
 
     if (idsValidos.empty()) {
-        std::cout << "No hay equipos registrados en esta división.\n";
+        cout << "No hay equipos registrados en esta división.\n";
         pausarConsola();
         return;
     }
 
-    std::cout << "\nIngrese el ID del equipo para gestionar su plantilla: ";
+    cout << "\nIngrese el ID del equipo para gestionar su plantilla: ";
     int idEqSel;
-    std::cin >> idEqSel;
+    cin >> idEqSel;
 
     Equipo *eqPtr = nullptr;
     for (auto &eq : sistema.equipos) {
@@ -1644,61 +1646,61 @@ void registrarJugador(SistemaCampeonato &sistema)
     }
 
     if (!eqPtr) {
-        std::cout << "[ERROR] ID de equipo no válido para el torneo actual.\n";
+        cout << "[ERROR] ID de equipo no válido para el torneo actual.\n";
         pausarConsola();
         return;
     }
 
     // Mostrar plantilla actual
-    std::cout << "\n--- Plantilla Actual de " << eqPtr->nombre << " ---\n";
+    cout << "\n--- Plantilla Actual de " << eqPtr->nombre << " ---\n";
     if (eqPtr->jugadores.empty()) {
-        std::cout << "(Sin jugadores registrados actualmente)\n";
+        cout << "(Sin jugadores registrados actualmente)\n";
     } else {
-        std::cout << std::left << std::setw(6) << "ID"
-                  << std::right << std::setw(5) << "#"
-                  << "  " << std::left << std::setw(28) << "Nombre y Apellido"
-                  << std::left << std::setw(15) << "Posición\n";
-        std::cout << std::string(56, '-') << "\n";
+        cout << left << setw(6) << "ID"
+                  << right << setw(5) << "#"
+                  << "  " << left << setw(28) << "Nombre y Apellido"
+                  << left << setw(15) << "Posición\n";
+        cout << string(56, '-') << "\n";
         for (const auto &j : eqPtr->jugadores) {
-            std::cout << std::left << std::setw(6) << j.idJugador
-                      << std::right << std::setw(5) << j.numeroCamiseta
-                      << "  " << std::left << std::setw(28) << (j.nombre + " " + j.apellido)
-                      << std::left << std::setw(15) << j.posicion << "\n";
+            cout << left << setw(6) << j.idJugador
+                      << right << setw(5) << j.numeroCamiseta
+                      << "  " << left << setw(28) << (j.nombre + " " + j.apellido)
+                      << left << setw(15) << j.posicion << "\n";
         }
     }
 
-    std::cout << "\n--- Datos del Nuevo Jugador ---\n";
+    cout << "\n--- Datos del Nuevo Jugador ---\n";
     Jugador jug;
     jug.idJugador = sistema.autoIncJugador++;
     jug.idEquipo = eqPtr->idEquipo;
 
-    std::cout << "Nombre: ";
-    std::getline(std::cin >> std::ws, jug.nombre);
+    cout << "Nombre: ";
+    getline(cin >> ws, jug.nombre);
 
-    std::cout << "Apellido: ";
-    std::getline(std::cin >> std::ws, jug.apellido);
+    cout << "Apellido: ";
+    getline(cin >> ws, jug.apellido);
 
-    std::cout << "Seleccione Posición:\n";
-    std::cout << "1. PORTERO\n2. DEFENSA\n3. MEDIOCAMPISTA\n4. DELANTERO\nOpción: ";
+    cout << "Seleccione Posición:\n";
+    cout << "1. PORTERO\n2. DEFENSA\n3. MEDIOCAMPISTA\n4. DELANTERO\nOpción: ";
     int opcPos;
-    std::cin >> opcPos;
+    cin >> opcPos;
     if (opcPos == 1) jug.posicion = "PORTERO";
     else if (opcPos == 2) jug.posicion = "DEFENSA";
     else if (opcPos == 3) jug.posicion = "MEDIOCAMPISTA";
     else jug.posicion = "DELANTERO";
 
-    std::cout << "Número de Camiseta (0-99): ";
-    std::cin >> jug.numeroCamiseta;
+    cout << "Número de Camiseta (0-99): ";
+    cin >> jug.numeroCamiseta;
 
     if (jug.numeroCamiseta < 0 || jug.numeroCamiseta > 99) {
-        std::cout << "[ERROR] El número de camiseta debe estar entre 0 y 99.\n";
+        cout << "[ERROR] El número de camiseta debe estar entre 0 y 99.\n";
         pausarConsola();
         return;
     }
 
     for (const auto &existente : eqPtr->jugadores) {
         if (existente.numeroCamiseta == jug.numeroCamiseta) {
-            std::cout << "\n[ERROR] El número de camiseta #" << jug.numeroCamiseta
+            cout << "\n[ERROR] El número de camiseta #" << jug.numeroCamiseta
                       << " ya pertenece a " << existente.nombre << " " << existente.apellido << " en este equipo.\n";
             pausarConsola();
             return;
@@ -1708,7 +1710,7 @@ void registrarJugador(SistemaCampeonato &sistema)
     dbInsertarJugadorEnBD(sistema, jug);
     eqPtr->jugadores.push_back(jug);
 
-    std::cout << "\n[OK] Jugador registrado con éxito en la Base de Datos 'CampeonatoFutbol':\n"
+    cout << "\n[OK] Jugador registrado con éxito en la Base de Datos 'CampeonatoFutbol':\n"
               << "     ID: " << jug.idJugador << " | " << jug.nombre << " " << jug.apellido
               << " (#" << jug.numeroCamiseta << " - " << jug.posicion << ")\n"
               << "     Equipo vinculado: " << eqPtr->nombre << ".\n";
@@ -1717,57 +1719,57 @@ void registrarJugador(SistemaCampeonato &sistema)
 
 void listarEquiposYPlantillas(const SistemaCampeonato &sistema, DivisionLiga division)
 {
-    std::string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
-    std::cout << "\n=======================================================\n";
-    std::cout << "         EQUIPOS Y PLANTILLAS - " << nomDiv << "       \n";
-    std::cout << "=======================================================\n";
+    string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
+    cout << "\n=======================================================\n";
+    cout << "         EQUIPOS Y PLANTILLAS - " << nomDiv << "       \n";
+    cout << "=======================================================\n";
 
     int count = 0;
     for (const auto &eq : sistema.equipos) {
         if (eq.idCampeonato == sistema.idTorneoActivo && eq.division == division) {
             count++;
-            std::cout << "\n🛡️  EQUIPO [" << std::setw(2) << eq.idEquipo << "]: " << eq.nombre
+            cout << "\nEQUIPO [" << setw(2) << eq.idEquipo << "]: " << eq.nombre
                       << " (Total Jugadores: " << eq.jugadores.size() << ")\n";
-            std::cout << std::string(60, '-') << "\n";
+            cout << string(60, '-') << "\n";
             if (eq.jugadores.empty()) {
-                std::cout << "   (No hay jugadores inscritos en este equipo)\n";
+                cout << "   (No hay jugadores inscritos en este equipo)\n";
             } else {
                 for (const auto &j : eq.jugadores) {
-                    std::cout << "   ID:" << std::setw(4) << j.idJugador
-                              << " | #" << std::setw(2) << j.numeroCamiseta
-                              << " | " << std::left << std::setw(26) << (j.nombre + " " + j.apellido)
-                              << " | " << std::left << std::setw(14) << j.posicion << "\n";
+                    cout << "   ID:" << setw(4) << j.idJugador
+                              << " | #" << setw(2) << j.numeroCamiseta
+                              << " | " << left << setw(26) << (j.nombre + " " + j.apellido)
+                              << " | " << left << setw(14) << j.posicion << "\n";
                 }
             }
         }
     }
 
     if (count == 0) {
-        std::cout << "No hay equipos registrados en esta división.\n";
+        cout << "No hay equipos registrados en esta división.\n";
     }
     pausarConsola();
 }
 
 // =========================================================================
-// MÓDULO FIXTURE Y ALGORITMOS
+// MÓDULO Calendario Y ALGORITMOS
 // =========================================================================
 
 bool generarClasificacionRoundRobin(SistemaCampeonato &sistema, DivisionLiga division)
 {
-    std::string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
-    std::cout << "\n=======================================================\n";
-    std::cout << "      GENERAR FIXTURE ROUND ROBIN - " << nomDiv << "   \n";
-    std::cout << "=======================================================\n";
+    string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
+    cout << "\n=======================================================\n";
+    cout << "      GENERAR Calendario ROUND ROBIN - " << nomDiv << "   \n";
+    cout << "=======================================================\n";
 
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.division == division && p.fase == "CLASIFICACION") {
-            std::cout << "[!] Ya existe un calendario de Clasificación generado para esta división.\n";
+            cout << "[!] Ya existe un calendario de Clasificación generado para esta división.\n";
             pausarConsola();
             return false;
         }
     }
 
-    std::vector<Equipo*> equiposDiv;
+    vector<Equipo*> equiposDiv;
     for (auto &eq : sistema.equipos) {
         if (eq.idCampeonato == sistema.idTorneoActivo && eq.division == division) {
             equiposDiv.push_back(&eq);
@@ -1776,12 +1778,12 @@ bool generarClasificacionRoundRobin(SistemaCampeonato &sistema, DivisionLiga div
 
     int n = (int)equiposDiv.size();
     if (n < 2) {
-        std::cout << "[ERROR] Se requieren al menos 2 equipos para generar el fixture (Actuales: " << n << ").\n";
+        cout << "[ERROR] Se requieren al menos 2 equipos para generar el Calendario (Actuales: " << n << ").\n";
         pausarConsola();
         return false;
     }
 
-    std::vector<int> indices;
+    vector<int> indices;
     for (int i = 0; i < n; ++i) indices.push_back(i);
     bool tieneDummy = false;
     if (n % 2 != 0) {
@@ -1800,7 +1802,7 @@ bool generarClasificacionRoundRobin(SistemaCampeonato &sistema, DivisionLiga div
             int visitIdx = indices[n - 1 - m];
 
             if (localIdx != -1 && visitIdx != -1) {
-                if (r % 2 == 1) std::swap(localIdx, visitIdx);
+                if (r % 2 == 1) swap(localIdx, visitIdx);
 
                 Partido part;
                 part.idPartido = sistema.autoIncPartido++;
@@ -1808,7 +1810,7 @@ bool generarClasificacionRoundRobin(SistemaCampeonato &sistema, DivisionLiga div
                 part.division = division;
                 part.fase = "CLASIFICACION";
                 part.jornada = r + 1;
-                part.fecha = "2026-02-" + std::to_string(10 + (r % 15));
+                part.fecha = "2026-02-" + to_string(10 + (r % 15));
                 part.idLocal = equiposDiv[localIdx]->idEquipo;
                 part.nombreLocal = equiposDiv[localIdx]->nombre;
                 part.golesLocal = 0;
@@ -1830,24 +1832,24 @@ bool generarClasificacionRoundRobin(SistemaCampeonato &sistema, DivisionLiga div
         indices[1] = ultimo;
     }
 
-    std::cout << "[OK] Fixture Round Robin generado y guardado en BD con éxito:\n";
-    std::cout << "     - Equipos participantes: " << equiposDiv.size() << "\n";
-    std::cout << "     - Jornadas creadas: " << totalRondas << "\n";
-    std::cout << "     - Partidos totales: " << partidosGenerados << "\n";
+    cout << "[OK] Calendario Round Robin generado y guardado en BD con éxito:\n";
+    cout << "     - Equipos participantes: " << equiposDiv.size() << "\n";
+    cout << "     - Jornadas creadas: " << totalRondas << "\n";
+    cout << "     - Partidos totales: " << partidosGenerados << "\n";
     pausarConsola();
     return true;
 }
 
 bool generarCuartosDeFinalTop8(SistemaCampeonato &sistema, DivisionLiga division)
 {
-    std::string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
-    std::cout << "\n=======================================================\n";
-    std::cout << "    GENERAR FASE 2: CUARTOS DE FINAL (TOP 8) - " << nomDiv << "\n";
-    std::cout << "=======================================================\n";
+    string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
+    cout << "\n=======================================================\n";
+    cout << "    GENERAR FASE 2: CUARTOS DE FINAL (TOP 8) - " << nomDiv << "\n";
+    cout << "=======================================================\n";
 
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.division == division && p.fase == "CUARTOS") {
-            std::cout << "[!] Ya se generaron los Cuartos de Final para esta división.\n";
+            cout << "[!] Ya se generaron los Cuartos de Final para esta división.\n";
             pausarConsola();
             return false;
         }
@@ -1856,34 +1858,34 @@ bool generarCuartosDeFinalTop8(SistemaCampeonato &sistema, DivisionLiga division
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.division == division &&
             p.fase == "CLASIFICACION" && p.estado == "PENDIENTE") {
-            std::cout << "[!] No se puede generar la segunda fase: aún hay partidos pendientes en la fase de Clasificación.\n";
+            cout << "[!] No se puede generar la segunda fase: aún hay partidos pendientes en la fase de Clasificación.\n";
             pausarConsola();
             return false;
         }
     }
 
-    std::vector<PosicionEquipo> tabla = calcularTablaPosiciones(sistema, division);
+    vector<PosicionEquipo> tabla = calcularTablaPosiciones(sistema, division);
     if (tabla.size() < 8) {
-        std::cout << "[ERROR] Se requieren al menos 8 equipos en competencia para la Fase Final (Registrados: "
+        cout << "[ERROR] Se requieren al menos 8 equipos en competencia para la Fase Final (Registrados: "
                   << tabla.size() << ").\n";
         pausarConsola();
         return false;
     }
 
-    std::cout << "Top 8 Equipos Clasificados a Cuartos de Final:\n";
+    cout << "Top 8 Equipos Clasificados a Cuartos de Final:\n";
     for (int i = 0; i < 8; ++i) {
-        std::cout << " " << (i + 1) << ". " << std::left << std::setw(25) << tabla[i].nombreEquipo
+        cout << " " << (i + 1) << ". " << left << setw(25) << tabla[i].nombreEquipo
                   << " (" << tabla[i].puntos << " pts)\n";
     }
 
-    std::vector<std::pair<int, int>> cruces = {
+    vector<pair<int, int>> cruces = {
         {0, 7}, // 1ro vs 8vo
         {1, 6}, // 2do vs 7mo
         {2, 5}, // 3ro vs 6to
         {3, 4}  // 4to vs 5to
     };
 
-    std::cout << "\nGenerando llaves oficiales de Cuartos de Final...\n";
+    cout << "\nGenerando llaves oficiales de Cuartos de Final...\n";
     for (size_t i = 0; i < cruces.size(); ++i) {
         int idxA = cruces[i].first;
         int idxB = cruces[i].second;
@@ -1905,35 +1907,35 @@ bool generarCuartosDeFinalTop8(SistemaCampeonato &sistema, DivisionLiga division
 
         dbInsertarPartidoEnBD(sistema, part);
         sistema.partidos.push_back(part);
-        std::cout << " Llave " << (i + 1) << ": " << part.nombreLocal << " vs " << part.nombreVisitante << "\n";
+        cout << " Llave " << (i + 1) << ": " << part.nombreLocal << " vs " << part.nombreVisitante << "\n";
     }
 
-    std::cout << "\n[OK] Cuartos de final generados y sincronizados con SQL Server correctamente.\n";
+    cout << "\n[OK] Cuartos de final generados y sincronizados con SQL Server correctamente.\n";
     pausarConsola();
     return true;
 }
 
 bool generarSemifinales(SistemaCampeonato &sistema, DivisionLiga division)
 {
-    std::string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
-    std::cout << "\n=======================================================\n";
-    std::cout << "         GENERAR SEMIFINALES - " << nomDiv << "        \n";
-    std::cout << "=======================================================\n";
+    string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
+    cout << "\n=======================================================\n";
+    cout << "         GENERAR SEMIFINALES - " << nomDiv << "        \n";
+    cout << "=======================================================\n";
 
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.division == division && p.fase == "SEMIFINAL") {
-            std::cout << "[!] Ya existen Semifinales generadas para esta división.\n";
+            cout << "[!] Ya existen Semifinales generadas para esta división.\n";
             pausarConsola();
             return false;
         }
     }
 
-    std::vector<Partido*> cuartos;
+    vector<Partido*> cuartos;
     for (auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.division == division && p.fase == "CUARTOS") {
             cuartos.push_back(&p);
             if (p.estado == "PENDIENTE") {
-                std::cout << "[!] Aún faltan partidos de Cuartos de Final por disputar.\n";
+                cout << "[!] Aún faltan partidos de Cuartos de Final por disputar.\n";
                 pausarConsola();
                 return false;
             }
@@ -1941,13 +1943,13 @@ bool generarSemifinales(SistemaCampeonato &sistema, DivisionLiga division)
     }
 
     if (cuartos.size() != 4) {
-        std::cout << "[ERROR] No se encontraron los 4 partidos reglamentarios de Cuartos de Final.\n";
+        cout << "[ERROR] No se encontraron los 4 partidos reglamentarios de Cuartos de Final.\n";
         pausarConsola();
         return false;
     }
 
-    std::vector<int> ganadores;
-    std::vector<std::string> nomGanadores;
+    vector<int> ganadores;
+    vector<string> nomGanadores;
     for (auto cp : cuartos) {
         if (cp->golesLocal >= cp->golesVisitante) {
             ganadores.push_back(cp->idLocal);
@@ -1958,7 +1960,7 @@ bool generarSemifinales(SistemaCampeonato &sistema, DivisionLiga division)
         }
     }
 
-    std::vector<std::pair<int, int>> crucesSemis = {{0, 1}, {2, 3}};
+    vector<pair<int, int>> crucesSemis = {{0, 1}, {2, 3}};
     for (size_t i = 0; i < crucesSemis.size(); ++i) {
         int a = crucesSemis[i].first;
         int b = crucesSemis[i].second;
@@ -1980,35 +1982,35 @@ bool generarSemifinales(SistemaCampeonato &sistema, DivisionLiga division)
 
         dbInsertarPartidoEnBD(sistema, part);
         sistema.partidos.push_back(part);
-        std::cout << " Semifinal " << (i + 1) << ": " << part.nombreLocal << " vs " << part.nombreVisitante << "\n";
+        cout << " Semifinal " << (i + 1) << ": " << part.nombreLocal << " vs " << part.nombreVisitante << "\n";
     }
 
-    std::cout << "\n[OK] Semifinales creadas y guardadas en la base de datos con éxito.\n";
+    cout << "\n[OK] Semifinales creadas y guardadas en la base de datos con éxito.\n";
     pausarConsola();
     return true;
 }
 
 bool generarGranFinal(SistemaCampeonato &sistema, DivisionLiga division)
 {
-    std::string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
-    std::cout << "\n=======================================================\n";
-    std::cout << "         GENERAR GRAN FINAL - " << nomDiv << "         \n";
-    std::cout << "=======================================================\n";
+    string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
+    cout << "\n=======================================================\n";
+    cout << "         GENERAR GRAN FINAL - " << nomDiv << "         \n";
+    cout << "=======================================================\n";
 
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.division == division && p.fase == "FINAL") {
-            std::cout << "[!] La Gran Final ya fue generada previamente.\n";
+            cout << "[!] La Gran Final ya fue generada previamente.\n";
             pausarConsola();
             return false;
         }
     }
 
-    std::vector<Partido*> semis;
+    vector<Partido*> semis;
     for (auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.division == division && p.fase == "SEMIFINAL") {
             semis.push_back(&p);
             if (p.estado == "PENDIENTE") {
-                std::cout << "[!] Aún faltan partidos de Semifinales por disputar.\n";
+                cout << "[!] Aún faltan partidos de Semifinales por disputar.\n";
                 pausarConsola();
                 return false;
             }
@@ -2016,16 +2018,16 @@ bool generarGranFinal(SistemaCampeonato &sistema, DivisionLiga division)
     }
 
     if (semis.size() != 2) {
-        std::cout << "[ERROR] Se requieren 2 semifinales finalizadas.\n";
+        cout << "[ERROR] Se requieren 2 semifinales finalizadas.\n";
         pausarConsola();
         return false;
     }
 
     int finLoc = (semis[0]->golesLocal >= semis[0]->golesVisitante) ? semis[0]->idLocal : semis[0]->idVisitante;
-    std::string nomFinLoc = (semis[0]->golesLocal >= semis[0]->golesVisitante) ? semis[0]->nombreLocal : semis[0]->nombreVisitante;
+    string nomFinLoc = (semis[0]->golesLocal >= semis[0]->golesVisitante) ? semis[0]->nombreLocal : semis[0]->nombreVisitante;
 
     int finVis = (semis[1]->golesLocal >= semis[1]->golesVisitante) ? semis[1]->idLocal : semis[1]->idVisitante;
-    std::string nomFinVis = (semis[1]->golesLocal >= semis[1]->golesVisitante) ? semis[1]->nombreLocal : semis[1]->nombreVisitante;
+    string nomFinVis = (semis[1]->golesLocal >= semis[1]->golesVisitante) ? semis[1]->nombreLocal : semis[1]->nombreVisitante;
 
     Partido part;
     part.idPartido = sistema.autoIncPartido++;
@@ -2045,18 +2047,18 @@ bool generarGranFinal(SistemaCampeonato &sistema, DivisionLiga division)
     dbInsertarPartidoEnBD(sistema, part);
     sistema.partidos.push_back(part);
 
-    std::cout << " GRAN FINAL: " << part.nombreLocal << " vs " << part.nombreVisitante << "\n";
-    std::cout << "\n[OK] Partido por el Campeonato creado y guardado en SQL Server.\n";
+    cout << " GRAN FINAL: " << part.nombreLocal << " vs " << part.nombreVisitante << "\n";
+    cout << "\n[OK] Partido por el Campeonato creado y guardado en SQL Server.\n";
     pausarConsola();
     return true;
 }
 
-void listarCalendarioPartidos(const SistemaCampeonato &sistema, DivisionLiga division, const std::string &filtroFase)
+void listarCalendarioPartidos(const SistemaCampeonato &sistema, DivisionLiga division, const string &filtroFase)
 {
-    std::string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
-    std::cout << "\n========================================================================================\n";
-    std::cout << "           CALENDARIO Y MARCADORES DE PARTIDOS - " << nomDiv << "                       \n";
-    std::cout << "========================================================================================\n";
+    string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
+    cout << "\n========================================================================================\n";
+    cout << "           CALENDARIO Y MARCADORES DE PARTIDOS - " << nomDiv << "                       \n";
+    cout << "========================================================================================\n";
 
     int count = 0;
     for (const auto &p : sistema.partidos) {
@@ -2064,24 +2066,24 @@ void listarCalendarioPartidos(const SistemaCampeonato &sistema, DivisionLiga div
             if (filtroFase != "TODAS" && p.fase != filtroFase) continue;
             count++;
 
-            std::cout << "ID: " << std::setw(3) << p.idPartido
-                      << " | Jor: " << std::setw(2) << p.jornada
-                      << " | Fase: " << std::left << std::setw(13) << p.fase
+            cout << "ID: " << setw(3) << p.idPartido
+                      << " | Jor: " << setw(2) << p.jornada
+                      << " | Fase: " << left << setw(13) << p.fase
                       << " | Fecha: " << p.fecha
-                      << " | " << std::right << std::setw(22) << p.nombreLocal << " ";
+                      << " | " << right << setw(22) << p.nombreLocal << " ";
 
             if (p.estado == "FINALIZADO") {
-                std::cout << "[" << p.golesLocal << " - " << p.golesVisitante << "]";
+                cout << "[" << p.golesLocal << " - " << p.golesVisitante << "]";
             } else {
-                std::cout << "[ vs ]";
+                cout << "[ vs ]";
             }
-            std::cout << " " << std::left << std::setw(22) << p.nombreVisitante
+            cout << " " << left << setw(22) << p.nombreVisitante
                       << " | " << (p.estado == "FINALIZADO" ? "FINALIZADO" : "PENDIENTE") << "\n";
         }
     }
 
     if (count == 0) {
-        std::cout << "No hay partidos registrados para esta categoría.\n";
+        cout << "No hay partidos registrados para esta categoría.\n";
     }
     pausarConsola();
 }
@@ -2092,35 +2094,35 @@ void listarCalendarioPartidos(const SistemaCampeonato &sistema, DivisionLiga div
 
 void ingresarResultadoPartido(SistemaCampeonato &sistema)
 {
-    std::cout << "\n=======================================================\n";
-    std::cout << "          INGRESAR RESULTADO E INCIDENCIAS             \n";
-    std::cout << "=======================================================\n";
+    cout << "\n=======================================================\n";
+    cout << "          INGRESAR RESULTADO E INCIDENCIAS             \n";
+    cout << "=======================================================\n";
 
-    std::cout << "Seleccione la Liga:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
+    cout << "Seleccione la Liga:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
     int opcDiv;
-    std::cin >> opcDiv;
+    cin >> opcDiv;
     DivisionLiga div = (opcDiv == 1) ? LIGA_MAYOR : LIGA_MENOR;
 
-    std::cout << "\nPartidos disponibles para registrar:\n";
-    std::vector<Partido*> pendientes;
+    cout << "\nPartidos disponibles para registrar:\n";
+    vector<Partido*> pendientes;
     for (auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.division == div && p.estado == "PENDIENTE") {
             pendientes.push_back(&p);
-            std::cout << "ID: " << std::setw(4) << p.idPartido
-                      << " [" << std::setw(13) << p.fase << "] "
+            cout << "ID: " << setw(4) << p.idPartido
+                      << " [" << setw(13) << p.fase << "] "
                       << p.nombreLocal << " vs " << p.nombreVisitante << "\n";
         }
     }
 
     if (pendientes.empty()) {
-        std::cout << "No hay partidos pendientes en esta división.\n";
+        cout << "No hay partidos pendientes en esta división.\n";
         pausarConsola();
         return;
     }
 
-    std::cout << "\nIngrese el ID del partido a registrar: ";
+    cout << "\nIngrese el ID del partido a registrar: ";
     int idSel;
-    std::cin >> idSel;
+    cin >> idSel;
 
     Partido *partidoSel = nullptr;
     for (auto p : pendientes) {
@@ -2131,7 +2133,7 @@ void ingresarResultadoPartido(SistemaCampeonato &sistema)
     }
 
     if (!partidoSel) {
-        std::cout << "[ERROR] ID de partido no válido.\n";
+        cout << "[ERROR] ID de partido no válido.\n";
         pausarConsola();
         return;
     }
@@ -2139,11 +2141,11 @@ void ingresarResultadoPartido(SistemaCampeonato &sistema)
     Equipo *eqLoc = buscarEquipoPorId(sistema, partidoSel->idLocal);
     Equipo *eqVis = buscarEquipoPorId(sistema, partidoSel->idVisitante);
 
-    std::cout << "\n--- Marcador Final ---\n";
-    std::cout << "Goles de " << partidoSel->nombreLocal << ": ";
-    std::cin >> partidoSel->golesLocal;
-    std::cout << "Goles de " << partidoSel->nombreVisitante << ": ";
-    std::cin >> partidoSel->golesVisitante;
+    cout << "\n--- Marcador Final ---\n";
+    cout << "Goles de " << partidoSel->nombreLocal << ": ";
+    cin >> partidoSel->golesLocal;
+    cout << "Goles de " << partidoSel->nombreVisitante << ": ";
+    cin >> partidoSel->golesVisitante;
 
     partidoSel->goles.clear();
     partidoSel->tarjetas.clear();
@@ -2165,19 +2167,19 @@ void ingresarResultadoPartido(SistemaCampeonato &sistema)
 
     // Registrar goles del equipo Local
     if (partidoSel->golesLocal > 0) {
-        std::cout << "\n--- ASIGNACIÓN DE GOLES: " << partidoSel->nombreLocal << " (" << partidoSel->golesLocal << " goles) ---\n";
+        cout << "\n--- ASIGNACIÓN DE GOLES: " << partidoSel->nombreLocal << " (" << partidoSel->golesLocal << " goles) ---\n";
         for (int i = 0; i < partidoSel->golesLocal; ++i) {
-            std::cout << "\nGol #" << (i + 1) << ":\n";
-            std::cout << "Plantilla de " << partidoSel->nombreLocal << ":\n";
+            cout << "\nGol #" << (i + 1) << ":\n";
+            cout << "Plantilla de " << partidoSel->nombreLocal << ":\n";
             if (eqLoc) {
                 for (size_t k = 0; k < eqLoc->jugadores.size(); ++k) {
-                    std::cout << " " << (k + 1) << ". #" << eqLoc->jugadores[k].numeroCamiseta
+                    cout << " " << (k + 1) << ". #" << eqLoc->jugadores[k].numeroCamiseta
                               << " - " << eqLoc->jugadores[k].nombre << " " << eqLoc->jugadores[k].apellido
                               << " (" << eqLoc->jugadores[k].posicion << ")\n";
                 }
             }
-            std::cout << "Seleccione el autor del gol (número de lista): ";
-            int selAut; std::cin >> selAut;
+            cout << "Seleccione el autor del gol (número de lista): ";
+            int selAut; cin >> selAut;
 
             IncidenciaGol g;
             if (eqLoc && selAut >= 1 && selAut <= (int)eqLoc->jugadores.size()) {
@@ -2197,8 +2199,8 @@ void ingresarResultadoPartido(SistemaCampeonato &sistema)
                 g.idPorteroVencido = 0;
                 g.nombrePorteroVencido = "Portero Visitante";
             }
-            std::cout << "Minuto de la anotación: ";
-            std::cin >> g.minuto;
+            cout << "Minuto de la anotación: ";
+            cin >> g.minuto;
             g.esAutogol = false;
             partidoSel->goles.push_back(g);
         }
@@ -2206,19 +2208,19 @@ void ingresarResultadoPartido(SistemaCampeonato &sistema)
 
     // Registrar goles del equipo Visitante
     if (partidoSel->golesVisitante > 0) {
-        std::cout << "\n--- ASIGNACIÓN DE GOLES: " << partidoSel->nombreVisitante << " (" << partidoSel->golesVisitante << " goles) ---\n";
+        cout << "\n--- ASIGNACIÓN DE GOLES: " << partidoSel->nombreVisitante << " (" << partidoSel->golesVisitante << " goles) ---\n";
         for (int i = 0; i < partidoSel->golesVisitante; ++i) {
-            std::cout << "\nGol #" << (i + 1) << ":\n";
-            std::cout << "Plantilla de " << partidoSel->nombreVisitante << ":\n";
+            cout << "\nGol #" << (i + 1) << ":\n";
+            cout << "Plantilla de " << partidoSel->nombreVisitante << ":\n";
             if (eqVis) {
                 for (size_t k = 0; k < eqVis->jugadores.size(); ++k) {
-                    std::cout << " " << (k + 1) << ". #" << eqVis->jugadores[k].numeroCamiseta
+                    cout << " " << (k + 1) << ". #" << eqVis->jugadores[k].numeroCamiseta
                               << " - " << eqVis->jugadores[k].nombre << " " << eqVis->jugadores[k].apellido
                               << " (" << eqVis->jugadores[k].posicion << ")\n";
                 }
             }
-            std::cout << "Seleccione el autor del gol (número de lista): ";
-            int selAut; std::cin >> selAut;
+            cout << "Seleccione el autor del gol (número de lista): ";
+            int selAut; cin >> selAut;
 
             IncidenciaGol g;
             if (eqVis && selAut >= 1 && selAut <= (int)eqVis->jugadores.size()) {
@@ -2238,8 +2240,8 @@ void ingresarResultadoPartido(SistemaCampeonato &sistema)
                 g.idPorteroVencido = 0;
                 g.nombrePorteroVencido = "Portero Local";
             }
-            std::cout << "Minuto de la anotación: ";
-            std::cin >> g.minuto;
+            cout << "Minuto de la anotación: ";
+            cin >> g.minuto;
             g.esAutogol = false;
             partidoSel->goles.push_back(g);
         }
@@ -2268,21 +2270,21 @@ void ingresarResultadoPartido(SistemaCampeonato &sistema)
     }
 
     // Registro de Tarjetas
-    std::cout << "\n¿Desea registrar tarjetas arbitrales para este partido? (1: Sí / 2: No): ";
-    int opcTar; std::cin >> opcTar;
+    cout << "\n¿Desea registrar tarjetas arbitrales para este partido? (1: Sí / 2: No): ";
+    int opcTar; cin >> opcTar;
     while (opcTar == 1) {
-        std::cout << "\nEquipo del jugador sancionado:\n1. " << partidoSel->nombreLocal << "\n2. " << partidoSel->nombreVisitante << "\nOpción: ";
-        int opcEqT; std::cin >> opcEqT;
+        cout << "\nEquipo del jugador sancionado:\n1. " << partidoSel->nombreLocal << "\n2. " << partidoSel->nombreVisitante << "\nOpción: ";
+        int opcEqT; cin >> opcEqT;
         Equipo *eqTar = (opcEqT == 1) ? eqLoc : eqVis;
 
         if (eqTar) {
-            std::cout << "Plantilla de " << eqTar->nombre << ":\n";
+            cout << "Plantilla de " << eqTar->nombre << ":\n";
             for (size_t k = 0; k < eqTar->jugadores.size(); ++k) {
-                std::cout << " " << (k + 1) << ". #" << eqTar->jugadores[k].numeroCamiseta
+                cout << " " << (k + 1) << ". #" << eqTar->jugadores[k].numeroCamiseta
                           << " - " << eqTar->jugadores[k].nombre << " " << eqTar->jugadores[k].apellido << "\n";
             }
-            std::cout << "Seleccione el jugador sancionado: ";
-            int selJ; std::cin >> selJ;
+            cout << "Seleccione el jugador sancionado: ";
+            int selJ; cin >> selJ;
 
             IncidenciaTarjeta t;
             if (selJ >= 1 && selJ <= (int)eqTar->jugadores.size()) {
@@ -2293,37 +2295,37 @@ void ingresarResultadoPartido(SistemaCampeonato &sistema)
                 t.nombreJugador = "Jugador Sancionado";
             }
 
-            std::cout << "Tipo de tarjeta (1: AMARILLA / 2: ROJA): ";
-            int tipoT; std::cin >> tipoT;
+            cout << "Tipo de tarjeta (1: AMARILLA / 2: ROJA): ";
+            int tipoT; cin >> tipoT;
             t.tipoTarjeta = (tipoT == 2) ? "ROJA" : "AMARILLA";
 
-            std::cout << "Minuto de la infracción: ";
-            std::cin >> t.minuto;
+            cout << "Minuto de la infracción: ";
+            cin >> t.minuto;
 
             partidoSel->tarjetas.push_back(t);
         }
 
-        std::cout << "¿Registrar otra tarjeta? (1: Sí / 2: No): ";
-        std::cin >> opcTar;
+        cout << "¿Registrar otra tarjeta? (1: Sí / 2: No): ";
+        cin >> opcTar;
     }
 
     partidoSel->estado = "FINALIZADO";
 
     dbActualizarResultadoPartidoEnBD(sistema, *partidoSel);
 
-    std::cout << "\n[OK] Resultado e incidencias guardados exitosamente y sincronizados directamente con SQL Server.\n";
+    cout << "\n[OK] Resultado e incidencias guardados exitosamente y sincronizados directamente con SQL Server.\n";
     pausarConsola();
 }
 
 void verDetallePartido(const SistemaCampeonato &sistema)
 {
-    std::cout << "\n========================================================================================\n";
-    std::cout << "               DETALLE DE INCIDENCIAS DE UN PARTIDO                                     \n";
-    std::cout << "========================================================================================\n";
+    cout << "\n========================================================================================\n";
+    cout << "               DETALLE DE INCIDENCIAS DE UN PARTIDO                                     \n";
+    cout << "========================================================================================\n";
 
-    std::cout << "Ingrese el ID del partido a consultar: ";
+    cout << "Ingrese el ID del partido a consultar: ";
     int idPart;
-    std::cin >> idPart;
+    cin >> idPart;
 
     const Partido *pSel = nullptr;
     for (const auto &p : sistema.partidos) {
@@ -2334,42 +2336,42 @@ void verDetallePartido(const SistemaCampeonato &sistema)
     }
 
     if (!pSel) {
-        std::cout << "[ERROR] No se encontró el partido con ID " << idPart << ".\n";
+        cout << "[ERROR] No se encontró el partido con ID " << idPart << ".\n";
         pausarConsola();
         return;
     }
 
-    std::cout << "\n----------------------------------------------------------------------------------------\n";
-    std::cout << " PARTIDO #" << pSel->idPartido << " [" << pSel->fase << " - Jornada " << pSel->jornada << "] | Fecha: " << pSel->fecha << "\n";
-    std::cout << " " << pSel->nombreLocal << " " << pSel->golesLocal << " - " << pSel->golesVisitante << " " << pSel->nombreVisitante << "\n";
-    std::cout << " Estado: " << pSel->estado << "\n";
-    std::cout << "----------------------------------------------------------------------------------------\n";
+    cout << "\n----------------------------------------------------------------------------------------\n";
+    cout << " PARTIDO #" << pSel->idPartido << " [" << pSel->fase << " - Jornada " << pSel->jornada << "] | Fecha: " << pSel->fecha << "\n";
+    cout << " " << pSel->nombreLocal << " " << pSel->golesLocal << " - " << pSel->golesVisitante << " " << pSel->nombreVisitante << "\n";
+    cout << " Estado: " << pSel->estado << "\n";
+    cout << "----------------------------------------------------------------------------------------\n";
 
-    std::cout << "⚽ GOLES Y ANOTADORES:\n";
+    cout << "\n--- GOLES Y ANOTADORES ---\n";
     if (pSel->goles.empty()) {
-        std::cout << "   (No hay goles registrados)\n";
+        cout << "   (No hay goles registrados)\n";
     } else {
         for (const auto &g : pSel->goles) {
-            std::cout << "   Min " << std::setw(2) << g.minuto << "' | Gol de " << g.nombreJugador
+            cout << "   Min " << setw(2) << g.minuto << "' | Gol de " << g.nombreJugador
                       << " (vs Portero: " << g.nombrePorteroVencido << ")\n";
         }
     }
 
-    std::cout << "\n🟨 TARJETAS Y SANCIONES:\n";
+    cout << "\n--- TARJETAS Y SANCIONES ---\n";
     if (pSel->tarjetas.empty()) {
-        std::cout << "   (Sin tarjetas registradas - Partido limpio)\n";
+        cout << "   (Sin tarjetas registradas - Partido limpio)\n";
     } else {
         for (const auto &t : pSel->tarjetas) {
-            std::cout << "   Min " << std::setw(2) << t.minuto << "' | [" << t.tipoTarjeta << "] - " << t.nombreJugador << "\n";
+            cout << "   Min " << setw(2) << t.minuto << "' | [" << t.tipoTarjeta << "] - " << t.nombreJugador << "\n";
         }
     }
 
-    std::cout << "\n🧤 CONTROL DE PORTEROS:\n";
+    cout << "\n--- CONTROL DE PORTEROS ---\n";
     if (pSel->porteros.empty()) {
-        std::cout << "   (Sin datos específicos de porteros)\n";
+        cout << "   (Sin datos específicos de porteros)\n";
     } else {
         for (const auto &cp : pSel->porteros) {
-            std::cout << "   " << cp.nombrePortero << " | Minutos: " << (cp.minutoSalida - cp.minutoEntrada)
+            cout << "   " << cp.nombrePortero << " | Minutos: " << (cp.minutoSalida - cp.minutoEntrada)
                       << " | Goles Encajados: " << cp.golesRecibidos << "\n";
         }
     }
@@ -2381,9 +2383,9 @@ void verDetallePartido(const SistemaCampeonato &sistema)
 // MÓDULO POSICIONES, ASCENSO/DESCENSO Y PREMIACIONES
 // =========================================================================
 
-std::vector<PosicionEquipo> calcularTablaPosiciones(const SistemaCampeonato &sistema, DivisionLiga division)
+vector<PosicionEquipo> calcularTablaPosiciones(const SistemaCampeonato &sistema, DivisionLiga division)
 {
-    std::map<int, PosicionEquipo> mapa;
+    map<int, PosicionEquipo> mapa;
 
     for (const auto &eq : sistema.equipos) {
         if (eq.idCampeonato == sistema.idTorneoActivo && eq.division == division) {
@@ -2427,18 +2429,36 @@ std::vector<PosicionEquipo> calcularTablaPosiciones(const SistemaCampeonato &sis
         }
     }
 
-    std::vector<PosicionEquipo> tabla;
+    vector<PosicionEquipo> tabla;
     for (auto &par : mapa) {
         par.second.dg = par.second.gf - par.second.gc;
         tabla.push_back(par.second);
     }
 
-    std::sort(tabla.begin(), tabla.end(), [](const PosicionEquipo &a, const PosicionEquipo &b) {
-        if (a.puntos != b.puntos) return a.puntos > b.puntos;
-        if (a.dg != b.dg) return a.dg > b.dg;
-        if (a.gf != b.gf) return a.gf > b.gf;
-        return a.nombreEquipo < b.nombreEquipo;
-    });
+    // Ordenamiento manual (Método de la Burbuja Multicriterio: 1. Puntos, 2. Diferencia de Goles, 3. Goles a Favor, 4. Nombre)
+    for (size_t i = 0; i < tabla.size(); ++i) {
+        for (size_t j = 0; j + 1 < tabla.size() - i; ++j) {
+            bool debeIntercambiar = false;
+            if (tabla[j].puntos < tabla[j + 1].puntos) {
+                debeIntercambiar = true;
+            } else if (tabla[j].puntos == tabla[j + 1].puntos) {
+                if (tabla[j].dg < tabla[j + 1].dg) {
+                    debeIntercambiar = true;
+                } else if (tabla[j].dg == tabla[j + 1].dg) {
+                    if (tabla[j].gf < tabla[j + 1].gf) {
+                        debeIntercambiar = true;
+                    } else if (tabla[j].gf == tabla[j + 1].gf && tabla[j].nombreEquipo > tabla[j + 1].nombreEquipo) {
+                        debeIntercambiar = true;
+                    }
+                }
+            }
+            if (debeIntercambiar) {
+                PosicionEquipo temp = tabla[j];
+                tabla[j] = tabla[j + 1];
+                tabla[j + 1] = temp;
+            }
+        }
+    }
 
     for (size_t i = 0; i < tabla.size(); ++i) {
         tabla[i].posicion = (int)i + 1;
@@ -2449,92 +2469,92 @@ std::vector<PosicionEquipo> calcularTablaPosiciones(const SistemaCampeonato &sis
 
 void imprimirTablaPosiciones(const SistemaCampeonato &sistema, DivisionLiga division)
 {
-    std::string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
-    std::vector<PosicionEquipo> tabla = calcularTablaPosiciones(sistema, division);
+    string nomDiv = (division == LIGA_MAYOR) ? "LIGA MAYOR" : "LIGA MENOR";
+    vector<PosicionEquipo> tabla = calcularTablaPosiciones(sistema, division);
 
-    std::cout << "\n========================================================================================\n";
-    std::cout << "                  TABLA GENERAL DE POSICIONES - " << nomDiv << "                        \n";
-    std::cout << "========================================================================================\n";
-    std::cout << std::left  << std::setw(5)  << "Pos"
-              << std::left  << std::setw(28) << "Equipo"
-              << std::right << std::setw(4)  << "PJ"
-              << std::right << std::setw(4)  << "PG"
-              << std::right << std::setw(4)  << "PE"
-              << std::right << std::setw(4)  << "PP"
-              << std::right << std::setw(5)  << "GF"
-              << std::right << std::setw(5)  << "GC"
-              << std::right << std::setw(5)  << "DG"
-              << std::right << std::setw(6)  << "PTS"
+    cout << "\n========================================================================================\n";
+    cout << "                  TABLA GENERAL DE POSICIONES - " << nomDiv << "                        \n";
+    cout << "========================================================================================\n";
+    cout << left  << setw(5)  << "Pos"
+              << left  << setw(28) << "Equipo"
+              << right << setw(4)  << "PJ"
+              << right << setw(4)  << "PG"
+              << right << setw(4)  << "PE"
+              << right << setw(4)  << "PP"
+              << right << setw(5)  << "GF"
+              << right << setw(5)  << "GC"
+              << right << setw(5)  << "DG"
+              << right << setw(6)  << "PTS"
               << "   Zona / Estado\n";
-    std::cout << std::string(88, '-') << "\n";
+    cout << string(88, '-') << "\n";
 
     for (const auto &eq : tabla) {
-        std::string zona = "";
+        string zona = "";
         if (eq.posicion <= 8) zona = "[Top 8 Clasificado]";
         if (division == LIGA_MAYOR && eq.posicion >= 11) zona = "[ZONA DESCENSO]";
         if (division == LIGA_MENOR && eq.posicion <= 2) zona = "[ZONA ASCENSO DIRECTO]";
 
-        std::cout << std::left  << std::setw(5)  << eq.posicion
-                  << std::left  << std::setw(28) << eq.nombreEquipo
-                  << std::right << std::setw(4)  << eq.pj
-                  << std::right << std::setw(4)  << eq.pg
-                  << std::right << std::setw(4)  << eq.pe
-                  << std::right << std::setw(4)  << eq.pp
-                  << std::right << std::setw(5)  << eq.gf
-                  << std::right << std::setw(5)  << eq.gc
-                  << std::right << std::setw(5)  << eq.dg
-                  << std::right << std::setw(6)  << eq.puntos
+        cout << left  << setw(5)  << eq.posicion
+                  << left  << setw(28) << eq.nombreEquipo
+                  << right << setw(4)  << eq.pj
+                  << right << setw(4)  << eq.pg
+                  << right << setw(4)  << eq.pe
+                  << right << setw(4)  << eq.pp
+                  << right << setw(5)  << eq.gf
+                  << right << setw(5)  << eq.gc
+                  << right << setw(5)  << eq.dg
+                  << right << setw(6)  << eq.puntos
                   << "   " << zona << "\n";
     }
 
-    std::cout << std::string(88, '-') << "\n";
-    std::cout << "Reglamento: Los mejores 8 clasifican a Cuartos de Final.\n";
-    std::cout << "En Liga Mayor descienden los 2 últimos lugares (11 y 12).\n";
-    std::cout << "En Liga Menor ascienden a Liga Mayor los 2 primeros lugares (1 y 2).\n";
+    cout << string(88, '-') << "\n";
+    cout << "Reglamento: Los mejores 8 clasifican a Cuartos de Final.\n";
+    cout << "En Liga Mayor descienden los 2 últimos lugares (11 y 12).\n";
+    cout << "En Liga Menor ascienden a Liga Mayor los 2 primeros lugares (1 y 2).\n";
     pausarConsola();
 }
 
 void imprimirTablasAscensoDescenso(const SistemaCampeonato &sistema)
 {
-    std::cout << "\n========================================================================================\n";
-    std::cout << "                   TABLAS OFICIALES DE ASCENSO Y DESCENSO                               \n";
-    std::cout << "========================================================================================\n";
+    cout << "\n========================================================================================\n";
+    cout << "                   TABLAS OFICIALES DE ASCENSO Y DESCENSO                               \n";
+    cout << "========================================================================================\n";
 
-    std::vector<PosicionEquipo> mayor = calcularTablaPosiciones(sistema, LIGA_MAYOR);
-    std::vector<PosicionEquipo> menor = calcularTablaPosiciones(sistema, LIGA_MENOR);
+    vector<PosicionEquipo> mayor = calcularTablaPosiciones(sistema, LIGA_MAYOR);
+    vector<PosicionEquipo> menor = calcularTablaPosiciones(sistema, LIGA_MENOR);
 
-    std::cout << "\n🔻 CANDIDATOS AL DESCENSO (LIGA MAYOR --> LIGA MENOR):\n";
-    std::cout << "----------------------------------------------------------------------------------------\n";
+    cout << "\n--- CANDIDATOS AL DESCENSO (LIGA MAYOR A LIGA MENOR) ---\n";
+    cout << "----------------------------------------------------------------------------------------\n";
     if (mayor.size() >= 2) {
         int n = (int)mayor.size();
-        std::cout << " 11. " << std::left << std::setw(28) << mayor[n - 2].nombreEquipo
-                  << " | Pts: " << std::setw(3) << mayor[n - 2].puntos
-                  << " | DIF: " << std::setw(3) << mayor[n - 2].dg << " [DESCENSO DIRECTO]\n";
-        std::cout << " 12. " << std::left << std::setw(28) << mayor[n - 1].nombreEquipo
-                  << " | Pts: " << std::setw(3) << mayor[n - 1].puntos
-                  << " | DIF: " << std::setw(3) << mayor[n - 1].dg << " [DESCENSO DIRECTO]\n";
+        cout << " 11. " << left << setw(28) << mayor[n - 2].nombreEquipo
+                  << " | Pts: " << setw(3) << mayor[n - 2].puntos
+                  << " | DIF: " << setw(3) << mayor[n - 2].dg << " [DESCENSO DIRECTO]\n";
+        cout << " 12. " << left << setw(28) << mayor[n - 1].nombreEquipo
+                  << " | Pts: " << setw(3) << mayor[n - 1].puntos
+                  << " | DIF: " << setw(3) << mayor[n - 1].dg << " [DESCENSO DIRECTO]\n";
     } else {
-        std::cout << "No hay suficientes equipos registrados en Liga Mayor.\n";
+        cout << "No hay suficientes equipos registrados en Liga Mayor.\n";
     }
 
-    std::cout << "\n🔺 CANDIDATOS AL ASCENSO (LIGA MENOR --> LIGA MAYOR):\n";
-    std::cout << "----------------------------------------------------------------------------------------\n";
+    cout << "\n--- CANDIDATOS AL ASCENSO (LIGA MENOR A LIGA MAYOR) ---\n";
+    cout << "----------------------------------------------------------------------------------------\n";
     if (menor.size() >= 2) {
-        std::cout << "  1. " << std::left << std::setw(28) << menor[0].nombreEquipo
-                  << " | Pts: " << std::setw(3) << menor[0].puntos
-                  << " | DIF: " << std::setw(3) << menor[0].dg << " [ASCENSO DIRECTO]\n";
-        std::cout << "  2. " << std::left << std::setw(28) << menor[1].nombreEquipo
-                  << " | Pts: " << std::setw(3) << menor[1].puntos
-                  << " | DIF: " << std::setw(3) << menor[1].dg << " [ASCENSO DIRECTO]\n";
+        cout << "  1. " << left << setw(28) << menor[0].nombreEquipo
+                  << " | Pts: " << setw(3) << menor[0].puntos
+                  << " | DIF: " << setw(3) << menor[0].dg << " [ASCENSO DIRECTO]\n";
+        cout << "  2. " << left << setw(28) << menor[1].nombreEquipo
+                  << " | Pts: " << setw(3) << menor[1].puntos
+                  << " | DIF: " << setw(3) << menor[1].dg << " [ASCENSO DIRECTO]\n";
     } else {
-        std::cout << "No hay suficientes equipos registrados en Liga Menor.\n";
+        cout << "No hay suficientes equipos registrados en Liga Menor.\n";
     }
 
     if (!sistema.historial.empty()) {
-        std::cout << "\n📜 HISTORIAL OFICIAL DE ASCENSOS Y DESCENSOS APLICADOS:\n";
-        std::cout << "----------------------------------------------------------------------------------------\n";
+        cout << "\n--- HISTORIAL DE ASCENSOS Y DESCENSOS APLICADOS ---\n";
+        cout << "----------------------------------------------------------------------------------------\n";
         for (const auto &h : sistema.historial) {
-            std::cout << " [" << h.tipoMovimiento << "] Equipo: " << std::left << std::setw(26) << h.nombreEquipo
+            cout << " [" << h.tipoMovimiento << "] Equipo: " << left << setw(26) << h.nombreEquipo
                       << " | De: " << (h.origen == LIGA_MAYOR ? "Liga Mayor" : "Liga Menor")
                       << " -> A: " << (h.destino == LIGA_MAYOR ? "Liga Mayor" : "Liga Menor")
                       << " | Fecha: " << h.fecha << "\n";
@@ -2545,22 +2565,22 @@ void imprimirTablasAscensoDescenso(const SistemaCampeonato &sistema)
 
 void aplicarAscensoDescensoOficial(SistemaCampeonato &sistema)
 {
-    std::cout << "\n=======================================================\n";
-    std::cout << "      APLICAR ASCENSO Y DESCENSO REGLAMENTARIO         \n";
-    std::cout << "=======================================================\n";
+    cout << "\n=======================================================\n";
+    cout << "      APLICAR ASCENSO Y DESCENSO REGLAMENTARIO         \n";
+    cout << "=======================================================\n";
 
-    std::vector<PosicionEquipo> mayor = calcularTablaPosiciones(sistema, LIGA_MAYOR);
-    std::vector<PosicionEquipo> menor = calcularTablaPosiciones(sistema, LIGA_MENOR);
+    vector<PosicionEquipo> mayor = calcularTablaPosiciones(sistema, LIGA_MAYOR);
+    vector<PosicionEquipo> menor = calcularTablaPosiciones(sistema, LIGA_MENOR);
 
     if (mayor.size() < 12 || menor.size() < 12) {
-        std::cout << "[AVISO] Por reglamento oficial se requieren 12 equipos por liga para formalizar el ciclo.\n";
-        std::cout << "¿Desea forzar la aplicación con los equipos actuales? (1: Sí / 2: Cancelar): ";
-        int opc; std::cin >> opc;
+        cout << "[AVISO] Por reglamento oficial se requieren 12 equipos por liga para formalizar el ciclo.\n";
+        cout << "¿Desea forzar la aplicación con los equipos actuales? (1: Sí / 2: Cancelar): ";
+        int opc; cin >> opc;
         if (opc != 1) return;
     }
 
     if (mayor.size() < 2 || menor.size() < 2) {
-        std::cout << "[ERROR] Equipos insuficientes para procesar ascensos y descensos.\n";
+        cout << "[ERROR] Equipos insuficientes para procesar ascensos y descensos.\n";
         pausarConsola();
         return;
     }
@@ -2575,7 +2595,7 @@ void aplicarAscensoDescensoOficial(SistemaCampeonato &sistema)
     Equipo *eqAsc2 = buscarEquipoPorId(sistema, menor[1].idEquipo);
 
     if (!eqDes1 || !eqDes2 || !eqAsc1 || !eqAsc2) {
-        std::cout << "[ERROR] No se localizaron los registros de los equipos en la estructura.\n";
+        cout << "[ERROR] No se localizaron los registros de los equipos en la estructura.\n";
         pausarConsola();
         return;
     }
@@ -2634,17 +2654,17 @@ void aplicarAscensoDescensoOficial(SistemaCampeonato &sistema)
     dbInsertarHistorialEnBD(sistema, h4);
     sistema.historial.push_back(h4);
 
-    std::cout << "\n[OK] Movimientos oficiales formalizados y guardados en SQL Server:\n";
-    std::cout << " 🔻 Descienden a Liga Menor: " << eqDes1->nombre << " y " << eqDes2->nombre << "\n";
-    std::cout << " 🔺 Ascienden a Liga Mayor: " << eqAsc1->nombre << " y " << eqAsc2->nombre << "\n";
+    cout << "\n[OK] Movimientos oficiales formalizados y guardados en SQL Server:\n";
+    cout << "  Descienden a Liga Menor: " << eqDes1->nombre << " y " << eqDes2->nombre << "\n";
+    cout << "  Ascienden a Liga Mayor: " << eqAsc1->nombre << " y " << eqAsc2->nombre << "\n";
     pausarConsola();
 }
 
 void imprimirModuloPremiaciones(const SistemaCampeonato &sistema)
 {
-    std::cout << "\n========================================================================================\n";
-    std::cout << "                    CUADRO DE HONOR Y PREMIACIONES DEL CAMPEONATO                       \n";
-    std::cout << "========================================================================================\n";
+    cout << "\n========================================================================================\n";
+    cout << "                    CUADRO DE HONOR Y PREMIACIONES DEL CAMPEONATO                       \n";
+    cout << "========================================================================================\n";
 
     const Premiacion *premSel = nullptr;
     for (const auto &pr : sistema.premiaciones) {
@@ -2655,25 +2675,25 @@ void imprimirModuloPremiaciones(const SistemaCampeonato &sistema)
     }
 
     if (!premSel || !premSel->habilitada) {
-        std::cout << "\n[!] El módulo de premiaciones aún NO se encuentra habilitado para este torneo.\n";
-        std::cout << "    (El Administrador debe finalizar el torneo formalmente para desbloquear los premios).\n";
+        cout << "\n[!] El módulo de premiaciones aún NO se encuentra habilitado para este torneo.\n";
+        cout << "    (El Administrador debe finalizar el torneo formalmente para desbloquear los premios).\n";
         pausarConsola();
         return;
     }
 
-    std::cout << "\n 🏆 CAMPEÓN LIGA MAYOR:          " << premSel->campeonMayor << "\n";
-    std::cout << " 🥈 CAMPEÓN LIGA MENOR:          " << premSel->campeonMenor << "\n";
-    std::cout << " ⚽ MÁXIMO GOLEADOR (BOTÍN DE ORO): " << premSel->maximoGoleador << " (" << premSel->golesAnotados << " goles)\n";
-    std::cout << " 🧤 PORTERO MENOS VENCIDO:       " << premSel->porteroMenosVencido << " (" << premSel->golesRecibidos << " goles encajados)\n";
-    std::cout << "========================================================================================\n";
+    cout << "\n  Campeon Liga Mayor:          " << premSel->campeonMayor << "\n";
+    cout << "  Campeon Liga Menor:          " << premSel->campeonMenor << "\n";
+    cout << "  Maximo Goleador (Botin de Oro): " << premSel->maximoGoleador << " (" << premSel->golesAnotados << " goles)\n";
+    cout << "  Portero Menos Vencido:       " << premSel->porteroMenosVencido << " (" << premSel->golesRecibidos << " goles encajados)\n";
+    cout << "========================================================================================\n";
     pausarConsola();
 }
 
 void finalizarTorneoYHabilitarPremiacion(SistemaCampeonato &sistema)
 {
-    std::cout << "\n=======================================================\n";
-    std::cout << "      FINALIZAR TORNEO Y HABILITAR PREMIACIONES        \n";
-    std::cout << "=======================================================\n";
+    cout << "\n=======================================================\n";
+    cout << "      FINALIZAR TORNEO Y HABILITAR PREMIACIONES        \n";
+    cout << "=======================================================\n";
 
     Torneo *tActivo = nullptr;
     for (auto &t : sistema.torneos) {
@@ -2684,7 +2704,7 @@ void finalizarTorneoYHabilitarPremiacion(SistemaCampeonato &sistema)
     }
 
     if (!tActivo) {
-        std::cout << "[ERROR] No hay torneo activo seleccionado.\n";
+        cout << "[ERROR] No hay torneo activo seleccionado.\n";
         pausarConsola();
         return;
     }
@@ -2720,7 +2740,7 @@ void finalizarTorneoYHabilitarPremiacion(SistemaCampeonato &sistema)
 
     // Si no hubo final jugada, tomar el 1er lugar de posiciones
     if (prem.campeonMayor == "Por Determinar") {
-        std::vector<PosicionEquipo> tabMayor = calcularTablaPosiciones(sistema, LIGA_MAYOR);
+        vector<PosicionEquipo> tabMayor = calcularTablaPosiciones(sistema, LIGA_MAYOR);
         if (!tabMayor.empty()) {
             prem.campeonMayor = tabMayor[0].nombreEquipo + " (Líder Tabla General)";
             idCampMayor = tabMayor[0].idEquipo;
@@ -2728,15 +2748,15 @@ void finalizarTorneoYHabilitarPremiacion(SistemaCampeonato &sistema)
     }
 
     // Campeón Liga Menor
-    std::vector<PosicionEquipo> tabMenor = calcularTablaPosiciones(sistema, LIGA_MENOR);
+    vector<PosicionEquipo> tabMenor = calcularTablaPosiciones(sistema, LIGA_MENOR);
     if (!tabMenor.empty()) {
         prem.campeonMenor = tabMenor[0].nombreEquipo;
         idCampMenor = tabMenor[0].idEquipo;
     }
 
     // Máximo Goleador acumulado
-    std::map<int, int> conteoGoles;
-    std::map<int, std::string> nombresGoles;
+    map<int, int> conteoGoles;
+    map<int, string> nombresGoles;
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.estado == "FINALIZADO") {
             for (const auto &g : p.goles) {
@@ -2759,8 +2779,8 @@ void finalizarTorneoYHabilitarPremiacion(SistemaCampeonato &sistema)
     }
 
     // Portero Menos Vencido
-    std::map<int, int> golesRecibidosPor;
-    std::map<int, std::string> nombresPor;
+    map<int, int> golesRecibidosPor;
+    map<int, string> nombresPor;
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.estado == "FINALIZADO") {
             for (const auto &cp : p.porteros) {
@@ -2796,11 +2816,11 @@ void finalizarTorneoYHabilitarPremiacion(SistemaCampeonato &sistema)
 
     dbGuardarPremiacionEnBD(sistema, prem, idGoleador, idPortero, idCampMayor);
 
-    std::cout << "\n[OK] ¡Torneo finalizado oficialmente y premiación guardada en SQL Server!\n";
-    std::cout << " 🏆 Campeón Liga Mayor:          " << prem.campeonMayor << "\n";
-    std::cout << " 🥈 Campeón Liga Menor:          " << prem.campeonMenor << "\n";
-    std::cout << " ⚽ Botín de Oro (Goleador):     " << prem.maximoGoleador << " (" << prem.golesAnotados << " goles)\n";
-    std::cout << " 🧤 Guante de Oro (Portero):     " << prem.porteroMenosVencido << " (" << prem.golesRecibidos << " goles recibidos)\n";
+    cout << "\n[OK] ¡Torneo finalizado oficialmente y premiación guardada en SQL Server!\n";
+    cout << "  Campeon Liga Mayor:          " << prem.campeonMayor << "\n";
+    cout << "  Campeon Liga Menor:          " << prem.campeonMenor << "\n";
+    cout << "  Botin de Oro (Goleador):     " << prem.maximoGoleador << " (" << prem.golesAnotados << " goles)\n";
+    cout << "  Guante de Oro (Portero):     " << prem.porteroMenosVencido << " (" << prem.golesRecibidos << " goles recibidos)\n";
     pausarConsola();
 }
 
@@ -2810,22 +2830,22 @@ void finalizarTorneoYHabilitarPremiacion(SistemaCampeonato &sistema)
 
 void imprimirReporteTarjetas(const SistemaCampeonato &sistema)
 {
-    std::cout << "\n========================================================================================\n";
-    std::cout << "          REPORTE DE TARJETAS ACUMULADAS Y DISCIPLINA (CONTROL OFICIAL)                 \n";
-    std::cout << " Torneo Activo ID: " << sistema.idTorneoActivo << "\n";
-    std::cout << "========================================================================================\n";
+    cout << "\n========================================================================================\n";
+    cout << "          REPORTE DE TARJETAS ACUMULADAS Y DISCIPLINA (CONTROL OFICIAL)                 \n";
+    cout << " Torneo Activo ID: " << sistema.idTorneoActivo << "\n";
+    cout << "========================================================================================\n";
 
     struct InfoTarjetasJugador {
         int idJugador;
-        std::string nombreJugador;
-        std::string nombreEquipo;
-        std::string posicion;
+        string nombreJugador;
+        string nombreEquipo;
+        string posicion;
         int camiseta;
         int amarillas;
         int rojas;
     };
 
-    std::map<int, InfoTarjetasJugador> mapaTarjetas;
+    map<int, InfoTarjetasJugador> mapaTarjetas;
 
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo) {
@@ -2862,63 +2882,63 @@ void imprimirReporteTarjetas(const SistemaCampeonato &sistema)
     }
 
     if (mapaTarjetas.empty()) {
-        std::cout << "No hay tarjetas registradas en los partidos disputados hasta el momento.\n";
+        cout << "No hay tarjetas registradas en los partidos disputados hasta el momento.\n";
     } else {
-        std::vector<InfoTarjetasJugador> lista;
+        vector<InfoTarjetasJugador> lista;
         for (const auto &par : mapaTarjetas) lista.push_back(par.second);
 
-        std::sort(lista.begin(), lista.end(), [](const InfoTarjetasJugador &a, const InfoTarjetasJugador &b) {
+        sort(lista.begin(), lista.end(), [](const InfoTarjetasJugador &a, const InfoTarjetasJugador &b) {
             int ptsA = a.amarillas * 1 + a.rojas * 3;
             int ptsB = b.amarillas * 1 + b.rojas * 3;
             if (ptsA != ptsB) return ptsA > ptsB;
             return a.rojas > b.rojas;
         });
 
-        std::cout << std::left  << std::setw(5)  << "No."
-                  << std::left  << std::setw(28) << "Jugador"
-                  << std::left  << std::setw(24) << "Equipo"
-                  << std::left  << std::setw(15) << "Posición"
-                  << std::right << std::setw(4)  << "#"
-                  << std::right << std::setw(5)  << "TA"
-                  << std::right << std::setw(5)  << "TR"
-                  << std::right << std::setw(10) << "Puntos Disc.\n";
-        std::cout << std::string(96, '-') << "\n";
+        cout << left  << setw(5)  << "No."
+                  << left  << setw(28) << "Jugador"
+                  << left  << setw(24) << "Equipo"
+                  << left  << setw(15) << "Posición"
+                  << right << setw(4)  << "#"
+                  << right << setw(5)  << "TA"
+                  << right << setw(5)  << "TR"
+                  << right << setw(10) << "Puntos Disc.\n";
+        cout << string(96, '-') << "\n";
 
         int idx = 1;
         for (const auto &j : lista) {
             int pts = j.amarillas * 1 + j.rojas * 3;
-            std::cout << std::left  << std::setw(5)  << idx++
-                      << std::left  << std::setw(28) << j.nombreJugador
-                      << std::left  << std::setw(24) << j.nombreEquipo
-                      << std::left  << std::setw(15) << j.posicion
-                      << std::right << std::setw(4)  << j.camiseta
-                      << std::right << std::setw(5)  << j.amarillas
-                      << std::right << std::setw(5)  << j.rojas
-                      << std::right << std::setw(10) << pts << "\n";
+            cout << left  << setw(5)  << idx++
+                      << left  << setw(28) << j.nombreJugador
+                      << left  << setw(24) << j.nombreEquipo
+                      << left  << setw(15) << j.posicion
+                      << right << setw(4)  << j.camiseta
+                      << right << setw(5)  << j.amarillas
+                      << right << setw(5)  << j.rojas
+                      << right << setw(10) << pts << "\n";
         }
-        std::cout << std::string(96, '-') << "\n";
-        std::cout << " [Regla Disciplinaria]: 1 Tarjeta Amarilla (TA) = 1 punto. 1 Tarjeta Roja (TR) = 3 puntos.\n";
+        cout << string(96, '-') << "\n";
+        cout << " [Regla Disciplinaria]: 1 Tarjeta Amarilla (TA) = 1 punto. 1 Tarjeta Roja (TR) = 3 puntos.\n";
     }
     pausarConsola();
 }
 
 void imprimirEstadisticasPremiacion(const SistemaCampeonato &sistema)
 {
-    std::cout << "\n========================================================================================\n";
-    std::cout << "          ESTADÍSTICAS EN VIVO Y VÍNCULO CON PREMIACIONES DEL TORNEO                   \n";
-    std::cout << " Torneo Activo ID: " << sistema.idTorneoActivo << "\n";
-    std::cout << "========================================================================================\n";
+    cout << "\n========================================================================================\n";
+    cout << "          ESTADÍSTICAS EN VIVO Y VÍNCULO CON PREMIACIONES DEL TORNEO                   \n";
+    cout << " Torneo Activo ID: " << sistema.idTorneoActivo << "\n";
+    cout << "========================================================================================\n";
 
     // 1. Tabla de Goleadores (Botín de Oro)
     struct GoleadorInfo {
         int idJugador;
-        std::string nombreJugador;
-        std::string nombreEquipo;
-        std::string posicion;
+        string nombreJugador;
+        string nombreEquipo;
+        string posicion;
         int camiseta;
         int goles;
     };
-    std::map<int, GoleadorInfo> mapaGoles;
+    map<int, GoleadorInfo> mapaGoles;
 
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.estado == "FINALIZADO") {
@@ -2950,42 +2970,42 @@ void imprimirEstadisticasPremiacion(const SistemaCampeonato &sistema)
         }
     }
 
-    std::cout << "\n⚽ TABLA DE GOLEADORES (VÍNCULO: BOTÍN DE ORO):\n";
+    cout << "\n--- TABLA DE GOLEADORES (BOTIN DE ORO) ---\n";
     if (mapaGoles.empty()) {
-        std::cout << "   (Aún no se han registrado goles en los partidos disputados)\n";
+        cout << "   (Aún no se han registrado goles en los partidos disputados)\n";
     } else {
-        std::vector<GoleadorInfo> listaGoles;
+        vector<GoleadorInfo> listaGoles;
         for (const auto &par : mapaGoles) listaGoles.push_back(par.second);
-        std::sort(listaGoles.begin(), listaGoles.end(), [](const GoleadorInfo &a, const GoleadorInfo &b) {
+        sort(listaGoles.begin(), listaGoles.end(), [](const GoleadorInfo &a, const GoleadorInfo &b) {
             return a.goles > b.goles;
         });
 
-        std::cout << std::left  << std::setw(5)  << "Pos."
-                  << std::left  << std::setw(28) << "Jugador"
-                  << std::left  << std::setw(24) << "Equipo"
-                  << std::left  << std::setw(15) << "Posición"
-                  << std::right << std::setw(6)  << "Goles\n";
-        std::cout << std::string(78, '-') << "\n";
+        cout << left  << setw(5)  << "Pos."
+                  << left  << setw(28) << "Jugador"
+                  << left  << setw(24) << "Equipo"
+                  << left  << setw(15) << "Posición"
+                  << right << setw(6)  << "Goles\n";
+        cout << string(78, '-') << "\n";
         int rk = 1;
         for (const auto &g : listaGoles) {
-            std::cout << std::left  << std::setw(5)  << rk++
-                      << std::left  << std::setw(28) << g.nombreJugador
-                      << std::left  << std::setw(24) << g.nombreEquipo
-                      << std::left  << std::setw(15) << g.posicion
-                      << std::right << std::setw(6)  << g.goles << "\n";
+            cout << left  << setw(5)  << rk++
+                      << left  << setw(28) << g.nombreJugador
+                      << left  << setw(24) << g.nombreEquipo
+                      << left  << setw(15) << g.posicion
+                      << right << setw(6)  << g.goles << "\n";
         }
     }
 
     // 2. Porteros Menos Vencidos (Guante de Oro)
     struct PorteroInfo {
         int idJugador;
-        std::string nombrePortero;
-        std::string nombreEquipo;
+        string nombrePortero;
+        string nombreEquipo;
         int partidosJugados;
         int minutosJugados;
         int golesRecibidos;
     };
-    std::map<int, PorteroInfo> mapaPorteros;
+    map<int, PorteroInfo> mapaPorteros;
 
     for (const auto &p : sistema.partidos) {
         if (p.idCampeonato == sistema.idTorneoActivo && p.estado == "FINALIZADO") {
@@ -3015,37 +3035,37 @@ void imprimirEstadisticasPremiacion(const SistemaCampeonato &sistema)
         }
     }
 
-    std::cout << "\n🧤 TABLA DE PORTEROS (VÍNCULO: GUANTE DE ORO):\n";
+    cout << "\n--- TABLA DE PORTEROS (GUANTE DE ORO) ---\n";
     if (mapaPorteros.empty()) {
-        std::cout << "   (Aún no se han registrado actuaciones de porteros)\n";
+        cout << "   (Aún no se han registrado actuaciones de porteros)\n";
     } else {
-        std::vector<PorteroInfo> listaPorteros;
+        vector<PorteroInfo> listaPorteros;
         for (const auto &par : mapaPorteros) listaPorteros.push_back(par.second);
-        std::sort(listaPorteros.begin(), listaPorteros.end(), [](const PorteroInfo &a, const PorteroInfo &b) {
+        sort(listaPorteros.begin(), listaPorteros.end(), [](const PorteroInfo &a, const PorteroInfo &b) {
             double promA = (a.minutosJugados > 0) ? ((double)a.golesRecibidos / a.minutosJugados) : 999.0;
             double promB = (b.minutosJugados > 0) ? ((double)b.golesRecibidos / b.minutosJugados) : 999.0;
             if (promA != promB) return promA < promB;
             return a.golesRecibidos < b.golesRecibidos;
         });
 
-        std::cout << std::left  << std::setw(5)  << "Pos."
-                  << std::left  << std::setw(28) << "Portero"
-                  << std::left  << std::setw(24) << "Equipo"
-                  << std::right << std::setw(5)  << "PJ"
-                  << std::right << std::setw(6)  << "Min"
-                  << std::right << std::setw(6)  << "G.Enc"
-                  << std::right << std::setw(11) << "Prom/Part\n";
-        std::cout << std::string(85, '-') << "\n";
+        cout << left  << setw(5)  << "Pos."
+                  << left  << setw(28) << "Portero"
+                  << left  << setw(24) << "Equipo"
+                  << right << setw(5)  << "PJ"
+                  << right << setw(6)  << "Min"
+                  << right << setw(6)  << "G.Enc"
+                  << right << setw(11) << "Prom/Part\n";
+        cout << string(85, '-') << "\n";
         int rk = 1;
         for (const auto &pi : listaPorteros) {
             double prom = (pi.partidosJugados > 0) ? ((double)pi.golesRecibidos / pi.partidosJugados) : 0.0;
-            std::cout << std::left  << std::setw(5)  << rk++
-                      << std::left  << std::setw(28) << pi.nombrePortero
-                      << std::left  << std::setw(24) << pi.nombreEquipo
-                      << std::right << std::setw(5)  << pi.partidosJugados
-                      << std::right << std::setw(6)  << pi.minutosJugados
-                      << std::right << std::setw(6)  << pi.golesRecibidos
-                      << std::right << std::setw(11) << std::fixed << std::setprecision(2) << prom << "\n";
+            cout << left  << setw(5)  << rk++
+                      << left  << setw(28) << pi.nombrePortero
+                      << left  << setw(24) << pi.nombreEquipo
+                      << right << setw(5)  << pi.partidosJugados
+                      << right << setw(6)  << pi.minutosJugados
+                      << right << setw(6)  << pi.golesRecibidos
+                      << right << setw(11) << fixed << setprecision(2) << prom << "\n";
         }
     }
     pausarConsola();
@@ -3059,25 +3079,25 @@ void menuPrincipal(SistemaCampeonato &sistema)
 {
     int opcion = 0;
     do {
-        std::cout << "\n=======================================================\n";
-        std::cout << "                    ACCESO AL SISTEMA                  \n";
+        cout << "\n=======================================================\n";
+        cout << "                    ACCESO AL SISTEMA                  \n";
         if (sistema.db.conectada) {
-            std::cout << "     [ESTADO BD: CONECTADO A SQL SERVER LOCALHOST]     \n";
+            cout << "     [ESTADO BD: CONECTADO A SQL SERVER LOCALHOST]     \n";
         } else {
-            std::cout << "         [ESTADO BD: MODO LOCAL (OFFLINE)]             \n";
+            cout << "         [ESTADO BD: MODO LOCAL (OFFLINE)]             \n";
         }
-        std::cout << "=======================================================\n";
-        std::cout << " 1. Iniciar Sesión\n";
-        std::cout << " 2. Registrar Nuevo Usuario Representante\n";
-        std::cout << " 3. Salir del Sistema\n";
-        std::cout << "-------------------------------------------------------\n";
-        std::cout << " Ingrese una opción: ";
-        std::cin >> opcion;
+        cout << "=======================================================\n";
+        cout << " 1. Iniciar Sesión\n";
+        cout << " 2. Registrar Nuevo Usuario Representante\n";
+        cout << " 3. Salir del Sistema\n";
+        cout << "-------------------------------------------------------\n";
+        cout << " Ingrese una opción: ";
+        cin >> opcion;
 
-        if (std::cin.eof()) break;
-        if (std::cin.fail()) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (cin.eof()) break;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             opcion = -1;
         }
 
@@ -3098,10 +3118,10 @@ void menuPrincipal(SistemaCampeonato &sistema)
                 guardarDatosEnArchivo(sistema);
                 break;
             case 3:
-                std::cout << "\nSaliendo del programa...\n";
+                cout << "\nSaliendo del programa...\n";
                 break;
             default:
-                std::cout << "\n[!] Opción inválida. Intente de nuevo.\n";
+                cout << "\n[!] Opción inválida. Intente de nuevo.\n";
                 break;
         }
     } while (opcion != 3);
@@ -3109,55 +3129,55 @@ void menuPrincipal(SistemaCampeonato &sistema)
 
 bool autenticarUsuario(SistemaCampeonato &sistema, Usuario &usuarioLogueado)
 {
-    std::string user, pass;
-    std::cout << "\n--- INICIAR SESIÓN ---\n";
-    std::cout << "Usuario: ";
-    std::cin >> user;
-    std::cout << "Contraseña: ";
-    std::cin >> pass;
+    string user, pass;
+    cout << "\n--- INICIAR SESIÓN ---\n";
+    cout << "Usuario: ";
+    cin >> user;
+    cout << "Contraseña: ";
+    cin >> pass;
 
     for (const auto &u : sistema.usuarios) {
         if (u.usuario == user && (u.contrasena == pass || (user == "admin" && (pass == "admin123" || pass == "1234")))) {
             usuarioLogueado = u;
-            std::cout << "\n[OK] ¡Bienvenido, " << u.nombreCompleto << "!\n";
-            std::cout << "Rol: " << (u.rol == ROL_ADMINISTRADOR ? "ADMINISTRADOR (ACCESO TOTAL)" : "REPRESENTANTE (GESTIÓN Y CONSULTA)") << "\n";
+            cout << "\n[OK] ¡Bienvenido, " << u.nombreCompleto << "!\n";
+            cout << "Rol: " << (u.rol == ROL_ADMINISTRADOR ? "ADMINISTRADOR (ACCESO TOTAL)" : "REPRESENTANTE (GESTIÓN Y CONSULTA)") << "\n";
             pausarConsola();
             return true;
         }
     }
 
-    std::cout << "\n[ERROR] Usuario o contraseña incorrectos.\n";
+    cout << "\n[ERROR] Usuario o contraseña incorrectos.\n";
     pausarConsola();
     return false;
 }
 
 void registrarUsuarioRepresentante(SistemaCampeonato &sistema)
 {
-    std::cout << "\n--- REGISTRO DE NUEVO REPRESENTANTE ---\n";
+    cout << "\n--- REGISTRO DE NUEVO REPRESENTANTE ---\n";
     Usuario nuevo;
     nuevo.idUsuario = sistema.autoIncUsuario++;
     nuevo.rol = ROL_REPRESENTANTE;
 
-    std::cout << "Nombre Completo: ";
-    std::getline(std::cin >> std::ws, nuevo.nombreCompleto);
+    cout << "Nombre Completo: ";
+    getline(cin >> ws, nuevo.nombreCompleto);
 
-    std::cout << "Nombre de Usuario (Login): ";
-    std::cin >> nuevo.usuario;
+    cout << "Nombre de Usuario (Login): ";
+    cin >> nuevo.usuario;
 
     for (const auto &u : sistema.usuarios) {
         if (u.usuario == nuevo.usuario) {
-            std::cout << "\n[ERROR] El nombre de usuario ya se encuentra en uso.\n";
+            cout << "\n[ERROR] El nombre de usuario ya se encuentra en uso.\n";
             pausarConsola();
             return;
         }
     }
 
-    std::cout << "Contraseña: ";
-    std::cin >> nuevo.contrasena;
+    cout << "Contraseña: ";
+    cin >> nuevo.contrasena;
 
     dbInsertarUsuarioEnBD(sistema, nuevo);
     sistema.usuarios.push_back(nuevo);
-    std::cout << "\n[OK] Usuario '" << nuevo.usuario << "' registrado exitosamente en SQL Server como Representante.\n";
+    cout << "\n[OK] Usuario '" << nuevo.usuario << "' registrado exitosamente en SQL Server como Representante.\n";
     pausarConsola();
 }
 
@@ -3165,88 +3185,105 @@ void menuAdministrador(SistemaCampeonato &sistema, const Usuario &admin)
 {
     int opcion = 0;
     do {
-        std::cout << "\n========================================================================================\n";
-        std::cout << "                     PANEL PRINCIPAL DEL ADMINISTRADOR                                  \n";
-        std::cout << " Usuario: " << admin.nombreCompleto << " | Rol: ADMINISTRADOR | Torneo Activo ID: " << sistema.idTorneoActivo << "\n";
+        cout << "\n========================================================================================\n";
+        cout << "                     PANEL PRINCIPAL DEL ADMINISTRADOR                                  \n";
+        cout << " Usuario: " << admin.nombreCompleto << " | Rol: ADMINISTRADOR | Torneo Activo ID: " << sistema.idTorneoActivo << "\n";
         if (sistema.db.conectada) {
-            std::cout << " [BASE DE DATOS]: CONECTADO DIRECTAMENTE A SQL SERVER (" << sistema.db.servidorConectado << ")\n";
+            cout << " [BASE DE DATOS]: CONECTADO DIRECTAMENTE A SQL SERVER (" << sistema.db.servidorConectado << ")\n";
         } else {
-            std::cout << " [BASE DE DATOS]: MODO LOCAL (OFFLINE)\n";
+            cout << " [BASE DE DATOS]: MODO LOCAL (OFFLINE)\n";
         }
-        std::cout << "========================================================================================\n";
-        std::cout << " 1.  🏆 Crear Nuevo Torneo / Seleccionar Activo\n";
-        std::cout << " 2.  🛡️  Registrar Equipos y Plantillas de Jugadores (Máx 12 por liga)\n";
-        std::cout << " 3.  👥 Listar Equipos y Jugadores Registrados\n";
-        std::cout << " 4.  📅 Generar Fixture: Fase 1 (Clasificación Todos vs Todos - Round Robin)\n";
-        std::cout << " 5.  🔥 Generar Fixture: Fase 2 (Cuartos de Final Top 8 Clasificados)\n";
-        std::cout << " 6.  🔥 Generar Fixture: Semifinales y Gran Final\n";
-        std::cout << " 7.  ⚽ Ingresar Resultados e Incidencias (Marcador, Goles, Tarjetas, Porteros)\n";
-        std::cout << " 8.  📊 Ver Tabla de Posiciones por Liga (Mayor y Menor)\n";
-        std::cout << " 9.  🔄 Ver Tablas de Ascenso/Descenso y Aplicar Cambios Oficiales\n";
-        std::cout << " 10. 🥇 Módulo de Premiaciones (Habilitar y Ver Cuadro de Honor)\n";
-        std::cout << " 11. 📋 Ver Calendario y Marcadores de Partidos\n";
-        std::cout << " 12. 🔍 Ver Detalle e Incidencias de un Partido Específico\n";
-        std::cout << " 13. 🟨 Reporte Detallado de Tarjetas y Disciplina por Jugador\n";
-        std::cout << " 14. 🏆 Estadísticas de Premiación en Vivo (Goleadores y Porteros)\n";
-        std::cout << " 15. 💾 Guardar y Sincronizar Datos en Disco / Base de Datos\n";
-        std::cout << " 0.   Cerrar Sesión\n";
-        std::cout << "----------------------------------------------------------------------------------------\n";
-        std::cout << " Seleccione una opción: ";
-        std::cin >> opcion;
+        cout << "========================================================================================\n";
+        cout << " 1.  Crear Nuevo Torneo / Seleccionar Activo\n";
+        cout << " 2.  Registrar Equipos y Plantillas de Jugadores (Máx 12 por liga)\n";
+        cout << " 3.  Listar Equipos y Jugadores Registrados\n";
+        cout << " 4.  Generar Calendario: Fase 1 (Clasificación Todos vs Todos - Round Robin)\n";
+        cout << " 5.  Generar Calendario: Fase 2 (Cuartos de Final Top 8 Clasificados)\n";
+        cout << " 6.  Generar Calendario: Semifinales y Gran Final\n";
+        cout << " 7.  Ingresar Resultados e Incidencias (Marcador, Goles, Tarjetas, Porteros)\n";
+        cout << " 8.  Ver Tabla de Posiciones por Liga (Mayor y Menor)\n";
+        cout << " 9.  Ver Tablas de Ascenso/Descenso y Aplicar Cambios Oficiales\n";
+        cout << " 10. Módulo de Premiaciones (Habilitar y Ver Cuadro de Honor)\n";
+        cout << " 11. Ver Calendario y Marcadores de Partidos\n";
+        cout << " 12. Ver Detalle e Incidencias de un Partido Específico\n";
+        cout << " 13. Reporte Detallado de Tarjetas y Disciplina por Jugador\n";
+        cout << " 14. Estadísticas de Premiación en Vivo (Goleadores y Porteros)\n";
+        cout << " 15. Guardar y Sincronizar Datos en Disco / Base de Datos\n";
+        cout << " 0.  Cerrar Sesión\n";
+        cout << "----------------------------------------------------------------------------------------\n";
+        cout << " Seleccione una opción: ";
+        cin >> opcion;
 
-        if (std::cin.eof()) break;
-        if (std::cin.fail()) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (cin.eof()) break;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             opcion = -1;
         }
 
         switch (opcion) {
             case 1: {
-                std::cout << "\n1. Crear Nuevo Torneo\n2. Seleccionar Torneo Existente\nOpción: ";
-                int sub; std::cin >> sub;
-                if (sub == 1) crearTorneo(sistema);
-                else seleccionarTorneoActivo(sistema);
-                guardarDatosEnArchivo(sistema);
+                cout << "\n1. Crear Nuevo Torneo\n2. Seleccionar Torneo Existente\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub == 1) {
+                    crearTorneo(sistema);
+                    guardarDatosEnArchivo(sistema);
+                }else if (sub==2) {
+                    seleccionarTorneoActivo(sistema);
+                    guardarDatosEnArchivo(sistema);
+                }
                 break;
             }
             case 2: {
-                std::cout << "\n1. Registrar Equipo\n2. Registrar Jugador en Equipo\nOpción: ";
-                int sub; std::cin >> sub;
-                if (sub == 1) registrarEquipo(sistema);
-                else registrarJugador(sistema);
-                guardarDatosEnArchivo(sistema);
+                cout << "\n1. Registrar Equipo\n2. Registrar Jugador en Equipo\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub == 1) {
+                    registrarEquipo(sistema);
+                    guardarDatosEnArchivo(sistema);
+                }else if (sub == 2) {
+                    registrarJugador(sistema);
+                    guardarDatosEnArchivo(sistema);
+                }
                 break;
             }
             case 3: {
-                std::cout << "\nSeleccione Liga a listar:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
-                int sub; std::cin >> sub;
-                listarEquiposYPlantillas(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                cout << "\nSeleccione Liga a listar:\n1. Liga Mayor\n2. Liga Menor\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub==1 || sub==2)listarEquiposYPlantillas(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
                 break;
             }
             case 4: {
-                std::cout << "\nSeleccione Liga para Fase 1 (Round Robin):\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
-                int sub; std::cin >> sub;
-                generarClasificacionRoundRobin(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
-                guardarDatosEnArchivo(sistema);
+                cout << "\nSeleccione Liga para Fase 1 (Round Robin):\n1. Liga Mayor\n2. Liga Menor\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub==1 || sub==2) {
+                    generarClasificacionRoundRobin(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                    guardarDatosEnArchivo(sistema);
+                }
                 break;
             }
             case 5: {
-                std::cout << "\nSeleccione Liga para Cuartos de Final (Top 8):\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
-                int sub; std::cin >> sub;
-                generarCuartosDeFinalTop8(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
-                guardarDatosEnArchivo(sistema);
+                cout << "\nSeleccione Liga para Cuartos de Final (Top 8):\n1. Liga Mayor\n2. Liga Menor\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub==1 || sub==2) {
+                    generarCuartosDeFinalTop8(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                    guardarDatosEnArchivo(sistema);
+                }
                 break;
             }
             case 6: {
-                std::cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
-                int sub; std::cin >> sub;
-                DivisionLiga d = (sub == 1 ? LIGA_MAYOR : LIGA_MENOR);
-                std::cout << "\n1. Generar Semifinales\n2. Generar Gran Final\nOpción: ";
-                int subFase; std::cin >> subFase;
-                if (subFase == 1) generarSemifinales(sistema, d);
-                else generarGranFinal(sistema, d);
-                guardarDatosEnArchivo(sistema);
+                cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub==1 || sub==2) {
+                    DivisionLiga d = (sub == 1 ? LIGA_MAYOR : LIGA_MENOR);
+                    cout << "\n1. Generar Semifinales\n2. Generar Gran Final\n3. Regresar al menu principal\nOpción: ";
+                    int subFase; cin >> subFase;
+                    if (subFase == 1) {
+                        generarSemifinales(sistema, d);
+                        guardarDatosEnArchivo(sistema);
+                    }else if (subFase == 2) {
+                        generarGranFinal(sistema, d);
+                    }
+                }
                 break;
             }
             case 7:
@@ -3254,31 +3291,43 @@ void menuAdministrador(SistemaCampeonato &sistema, const Usuario &admin)
                 guardarDatosEnArchivo(sistema);
                 break;
             case 8: {
-                std::cout << "\nSeleccione Liga para Tabla de Posiciones:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
-                int sub; std::cin >> sub;
-                imprimirTablaPosiciones(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                cout << "\nSeleccione Liga para Tabla de Posiciones:\n1. Liga Mayor\n2. Liga Menor\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub == 1 || sub == 2) {
+                    imprimirTablaPosiciones(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                }
                 break;
             }
             case 9: {
-                std::cout << "\n1. Ver Tablas de Ascenso y Descenso\n2. Formalizar y Aplicar Ascenso/Descenso Oficial\nOpción: ";
-                int sub; std::cin >> sub;
-                if (sub == 1) imprimirTablasAscensoDescenso(sistema);
-                else aplicarAscensoDescensoOficial(sistema);
-                guardarDatosEnArchivo(sistema);
+                cout << "\n1. Ver Tablas de Ascenso y Descenso\n2. Formalizar y Aplicar Ascenso/Descenso Oficial\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub == 1) {
+                    imprimirTablasAscensoDescenso(sistema);
+                    guardarDatosEnArchivo(sistema);
+                }else if (sub == 2) {
+                    aplicarAscensoDescensoOficial(sistema);
+                    guardarDatosEnArchivo(sistema);
+                }
                 break;
             }
             case 10: {
-                std::cout << "\n1. Ver Cuadro de Honor\n2. Finalizar Campeonato Oficialmente\nOpción: ";
-                int sub; std::cin >> sub;
-                if (sub == 1) imprimirModuloPremiaciones(sistema);
-                else finalizarTorneoYHabilitarPremiacion(sistema);
-                guardarDatosEnArchivo(sistema);
+                cout << "\n1. Ver Cuadro de Honor\n2. Finalizar Campeonato Oficialmente\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub == 1) {
+                    imprimirModuloPremiaciones(sistema);
+                    guardarDatosEnArchivo(sistema);
+                }else if(sub==2) {
+                    finalizarTorneoYHabilitarPremiacion(sistema);
+                    guardarDatosEnArchivo(sistema);
+                }
                 break;
             }
             case 11: {
-                std::cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
-                int sub; std::cin >> sub;
-                listarCalendarioPartidos(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\n3. Regresar al menu principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub == 1 || sub == 2) {
+                    listarCalendarioPartidos(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                }
                 break;
             }
             case 12:
@@ -3292,14 +3341,14 @@ void menuAdministrador(SistemaCampeonato &sistema, const Usuario &admin)
                 break;
             case 15:
                 guardarDatosEnArchivo(sistema);
-                std::cout << "\n[OK] Datos guardados exitosamente.\n";
+                cout << "\n[OK] Datos guardados exitosamente.\n";
                 pausarConsola();
                 break;
             case 0:
-                std::cout << "\nCerrando sesión de administrador...\n";
+                cout << "\nCerrando sesión de administrador...\n";
                 break;
             default:
-                std::cout << "\n[!] Opción no reconocida.\n";
+                cout << "\n[!] Opción no reconocida.\n";
                 break;
         }
     } while (opcion != 0);
@@ -3309,59 +3358,65 @@ void menuRepresentante(SistemaCampeonato &sistema, const Usuario &rep)
 {
     int opcion = 0;
     do {
-        std::cout << "\n========================================================================================\n";
-        std::cout << "                  PANEL DEL REPRESENTANTE / USUARIO REGULAR                             \n";
-        std::cout << " Usuario: " << rep.nombreCompleto << " | MODO: GESTIÓN DE PLANTILLA Y CONSULTA | Torneo: " << sistema.idTorneoActivo << "\n";
+        cout << "\n========================================================================================\n";
+        cout << "                  PANEL DEL REPRESENTANTE / USUARIO REGULAR                             \n";
+        cout << " Usuario: " << rep.nombreCompleto << " | MODO: GESTIÓN DE PLANTILLA Y CONSULTA | Torneo: " << sistema.idTorneoActivo << "\n";
         if (sistema.db.conectada) {
-            std::cout << " [BASE DE DATOS]: CONECTADO DIRECTAMENTE A SQL SERVER (" << sistema.db.servidorConectado << ")\n";
+            cout << " [BASE DE DATOS]: CONECTADO DIRECTAMENTE A SQL SERVER (" << sistema.db.servidorConectado << ")\n";
         } else {
-            std::cout << " [BASE DE DATOS]: MODO LOCAL (OFFLINE)\n";
+            cout << " [BASE DE DATOS]: MODO LOCAL (OFFLINE)\n";
         }
-        std::cout << "========================================================================================\n";
-        std::cout << " 1. 📊 Ver Tabla de Posiciones (Liga Mayor / Liga Menor)\n";
-        std::cout << " 2. 🔄 Ver Tablas de Ascenso y Descenso\n";
-        std::cout << " 3. 📋 Ver Calendario de Partidos y Marcadores\n";
-        std::cout << " 4. 🔍 Ver Incidencias Detalladas de un Partido (Goles y Tarjetas)\n";
-        std::cout << " 5. 👥 Ver Equipos y Plantillas de Jugadores Registrados\n";
-        std::cout << " 6. 🥇 Ver Premiaciones Oficiales del Torneo\n";
-        std::cout << " 7. 📝 REGISTRAR JUGADOR EN LA PLANTILLA DE UN EQUIPO (Alta Directa en BD)\n";
-        std::cout << " 8. 🟨 Reporte Detallado de Tarjetas Acumuladas (Control Disciplinario)\n";
-        std::cout << " 9. 🏆 Estadísticas y Vínculo con Premiación (Goleadores y Porteros)\n";
-        std::cout << " 0. Cerrar Sesión\n";
-        std::cout << "----------------------------------------------------------------------------------------\n";
-        std::cout << " Seleccione una opción: ";
-        std::cin >> opcion;
+        cout << "========================================================================================\n";
+        cout << " 1. Ver Tabla de Posiciones (Liga Mayor / Liga Menor)\n";
+        cout << " 2. Ver Tablas de Ascenso y Descenso\n";
+        cout << " 3. ver Calendario de Partidos y Marcadores\n";
+        cout << " 4. Ver Incidencias Detalladas de un Partido (Goles y Tarjetas)\n";
+        cout << " 5. Ver Equipos y Plantillas de Jugadores Registrados\n";
+        cout << " 6. Ver Premiaciones Oficiales del Torneo\n";
+        cout << " 7. Registrar Jugador en la Plantilla de un Equipo\n";
+        cout << " 8. Reporte Detallado de Tarjetas Acumuladas (Control Disciplinario)\n";
+        cout << " 9. Estadísticas y Vínculo con Premiación (Goleadores y Porteros)\n";
+        cout << " 0. Cerrar Sesión\n";
+        cout << "----------------------------------------------------------------------------------------\n";
+        cout << " Seleccione una opción: ";
+        cin >> opcion;
 
-        if (std::cin.eof()) break;
-        if (std::cin.fail()) {
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        if (cin.eof()) break;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
             opcion = -1;
         }
 
         switch (opcion) {
             case 1: {
-                std::cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
-                int sub; std::cin >> sub;
-                imprimirTablaPosiciones(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\n3. Regredar al menú principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub==1 || sub==2) {
+                    imprimirTablaPosiciones(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                }
                 break;
             }
             case 2:
                 imprimirTablasAscensoDescenso(sistema);
                 break;
             case 3: {
-                std::cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
-                int sub; std::cin >> sub;
-                listarCalendarioPartidos(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\n3. Regredar al menú principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub==1 || sub==2) {
+                    listarCalendarioPartidos(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                }
                 break;
             }
             case 4:
                 verDetallePartido(sistema);
                 break;
             case 5: {
-                std::cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\nOpción: ";
-                int sub; std::cin >> sub;
-                listarEquiposYPlantillas(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                cout << "\nSeleccione Liga:\n1. Liga Mayor\n2. Liga Menor\n3. Regredar al menú principal\nOpción: ";
+                int sub; cin >> sub;
+                if (sub==1 || sub==2) {
+                    listarEquiposYPlantillas(sistema, (sub == 1 ? LIGA_MAYOR : LIGA_MENOR));
+                }
                 break;
             }
             case 6:
@@ -3378,10 +3433,10 @@ void menuRepresentante(SistemaCampeonato &sistema, const Usuario &rep)
                 imprimirEstadisticasPremiacion(sistema);
                 break;
             case 0:
-                std::cout << "\nCerrando sesión...\n";
+                cout << "\nCerrando sesión...\n";
                 break;
             default:
-                std::cout << "\n[!] Opción no válida.\n";
+                cout << "\n[!] Opción no válida.\n";
                 break;
         }
     } while (opcion != 0);
